@@ -1,25 +1,18 @@
-import AnimatedBackground from '@/components/background/AnimatedBackground';
-import { Button, Container } from '@/components/ui';
+import Hero from '@/components/hero/Hero';
 
 export default function Home() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden">
-      <AnimatedBackground />
+    <main>
+      <Hero />
 
-      <Container className="text-center">
-        <h1 className="text-6xl font-bold md:text-8xl">
-          Portfolio OS
-        </h1>
-
-        <p className="mx-auto mt-6 max-w-xl text-xl text-[var(--muted)]">
-          Building the future, one interaction at a time.
+      <section
+        id="projects"
+        className="flex min-h-screen items-center justify-center"
+      >
+        <p className="text-[var(--muted)]">
+          Projects section coming next...
         </p>
-
-        <div className="mt-10 flex justify-center gap-4">
-          <Button>Explore</Button>
-          <Button variant="secondary">Resume</Button>
-        </div>
-      </Container>
+      </section>
     </main>
   );
 }
