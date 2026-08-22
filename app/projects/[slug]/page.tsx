@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import ProjectCaseStudy from '@/components/projects/ProjectCaseStudy';
+import PageTransition from '@/components/transitions/PageTransition';
 import { projects } from '@/data/projects';
 
 type ProjectPageProps = {
@@ -22,5 +23,9 @@ export default async function ProjectPage({
     notFound();
   }
 
-  return <ProjectCaseStudy project={project} />;
+  return (
+  <PageTransition>
+    <ProjectCaseStudy project={project} />
+  </PageTransition>
+);
 }

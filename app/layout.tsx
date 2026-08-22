@@ -1,19 +1,27 @@
-import './globals.css';
 import type { Metadata } from 'next';
+
+import Navbar from '@/components/layout/Navbar';
+
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Portfolio OS',
-  description: 'AI-powered interactive portfolio',
+  description:
+    'A creative developer portfolio.',
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Navbar />
+
+        {children}
+      </body>
     </html>
   );
 }
