@@ -1,123 +1,267 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-
-import { portfolio } from '@/data/portfolio';
-import AnimatedBackground from '@/components/background/AnimatedBackground';
-import Container from '@/components/ui/Container';
-import Button from '@/components/ui/Button';
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
+import Link from 'next/link';
 
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRoleIndex((current) => (current + 1) % portfolio.roles.length);
-    }, 2500);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-    return () => clearInterval(interval);
-  }, []);
+  const smoothX = useSpring(mouseX, {
+    stiffness: 80,
+    damping: 20,
+  });
+
+  const smoothY = useSpring(mouseY, {
+    stiffness: 80,
+    damping: 20,
+  });
+
+  const glowX = useTransform(smoothX, [-1, 1], ['20%', '80%']);
+  const glowY = useTransform(smoothY, [-1, 1], ['20%', '80%']);
+
+  const handleMouseMove = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
+    if (prefersReducedMotion) return;
+
+    const { innerWidth, innerHeight } = window;
+
+    const x =
+      (event.clientX / innerWidth) * 2 - 1;
+
+    const y =
+      (event.clientY / innerHeight) * 2 - 1;
+
+    mouseX.set(x);
+    mouseY.set(y);
+  };
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden">
-      <AnimatedBackground />
+    <section
+      id="home"
+      onMouseMove={handleMouseMove}
+      className="
+        relative flex min-h-screen
+        items-center overflow-hidden
+        px-6
+      "
+    >
+      {/* Ambient cursor glow */}
+      <motion.div
+        className="
+          pointer-events-none absolute
+          h-[500px] w-[500px]
+          -translate-x-1/2 -translate-y-1/2
+          rounded-full
+          bg-violet-500/[0.08]
+          blur-[120px]
+        "
+        style={{
+          left: prefersReducedMotion ? '50%' : glowX,
+          top: prefersReducedMotion ? '50%' : glowY,
+        }}
+      />
 
-      <Container className="relative z-10">
-        <div className="mx-auto max-w-5xl text-center">
-          {/* Greeting */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="mb-5 text-lg font-medium text-[var(--muted)] md:text-xl"
+      {/* Subtle grid */}
+      <div
+        className="
+          pointer-events-none absolute inset-0
+          opacity-[0.025]
+          [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)]
+          [background-size:64px_64px]
+        "
+      />
+
+      {/* Content */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
+        {/* Eyebrow */}
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.7,
+          }}
+          className="mb-8 flex items-center gap-3"
+        >
+          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+
+          <span className="text-xs uppercase tracking-[0.25em] text-white/40">
+            Data Science · Software · AI
+          </span>
+        </motion.div>
+
+        {/* Name */}
+        <motion.h1
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.8,
+            delay: 0.1,
+          }}
+          className="
+            max-w-5xl
+            text-6xl font-semibold
+            tracking-[-0.05em]
+            md:text-8xl
+            lg:text-[9rem]
+            lg:leading-[0.9]
+          "
+        >
+          Shashikant
+          <span className="text-white/20">.</span>
+        </motion.h1>
+
+        {/* Description */}
+        <motion.p
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.8,
+            delay: 0.2,
+          }}
+          className="
+            mt-8 max-w-2xl
+            text-base leading-7
+            text-[var(--muted)]
+            md:text-lg md:leading-8
+          "
+        >
+          I build data-driven products, software systems,
+          and AI-powered experiments — turning ideas into
+          things people can actually use.
+        </motion.p>
+
+        {/* Actions */}
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.7,
+            delay: 0.35,
+          }}
+          className="mt-10 flex flex-wrap gap-4"
+        >
+          <Link
+            href="#projects"
+            className="
+              group inline-flex items-center
+              gap-3 rounded-full
+              bg-white px-6 py-3.5
+              text-sm font-medium text-black
+              transition-transform duration-300
+              hover:scale-[1.03]
+            "
           >
-            Hello, I&apos;m
-          </motion.p>
+            Explore work
 
-          {/* Name */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="text-6xl font-bold tracking-tight md:text-8xl lg:text-9xl"
-          >
-            {portfolio.name}
-            <span className="text-[var(--primary)]">.</span>
-          </motion.h1>
-
-          {/* Animated Role */}
-          <div className="mt-8 h-12 overflow-hidden md:h-16">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={portfolio.roles[roleIndex]}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-                transition={{ duration: 0.45 }}
-                className="text-2xl font-semibold md:text-4xl"
-              >
-                {portfolio.roles[roleIndex]}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Bio */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="mx-auto mt-7 max-w-2xl text-base leading-7 text-[var(--muted)] md:text-lg"
-          >
-            {portfolio.bio}
-          </motion.p>
-
-          {/* Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.55 }}
-            className="mt-10 flex flex-col justify-center gap-4 sm:flex-row"
-          >
-            <Button
-              onClick={() => {
-                document
-                  .getElementById('projects')
-                  ?.scrollIntoView({ behavior: 'smooth' });
-              }}
+            <span
+              className="
+                transition-transform duration-300
+                group-hover:translate-x-1
+              "
             >
-              Explore My Work
-            </Button>
+              ↓
+            </span>
+          </Link>
 
-            <Button
-              variant="secondary"
-              onClick={() => window.open(portfolio.resume, '_blank')}
-            >
-              View Resume
-            </Button>
-          </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="mt-20 flex flex-col items-center gap-3 text-sm text-[var(--muted)]"
+          <a
+            href="https://github.com/i-shashikant"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              inline-flex items-center
+              gap-2 rounded-full
+              border border-white/10
+              bg-white/[0.03]
+              px-6 py-3.5
+              text-sm text-white/60
+              backdrop-blur
+              transition-all duration-300
+              hover:border-white/20
+              hover:bg-white/[0.07]
+              hover:text-white
+            "
           >
-            <span>Scroll to explore</span>
+            GitHub
+            <span>↗</span>
+          </a>
+        </motion.div>
+      </div>
 
-            <motion.div
-              animate={{ y: [0, 7, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              className="h-8 w-px bg-white/30"
-            />
-          </motion.div>
-        </div>
-      </Container>
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        transition={{
+          delay: 1.2,
+          duration: 0.8,
+        }}
+        className="
+          absolute bottom-8
+          left-1/2
+          -translate-x-1/2
+          text-center
+        "
+      >
+        <p className="mb-3 text-[10px] uppercase tracking-[0.3em] text-white/20">
+          Scroll
+        </p>
+
+        <motion.div
+          animate={
+            prefersReducedMotion
+              ? undefined
+              : {
+                  y: [0, 8, 0],
+                }
+          }
+          transition={{
+            duration: 1.8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          className="text-white/30"
+        >
+          ↓
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

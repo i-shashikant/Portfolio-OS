@@ -4,6 +4,7 @@ import {
   motion,
   useMotionValue,
   useSpring,
+  useReducedMotion,
 } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
@@ -21,47 +22,50 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const cardRef = useRef<HTMLElement>(null);
 
+  
   // 3D tilt
   const rotateX = useSpring(0, {
     stiffness: 180,
     damping: 18,
-  });
+});
 
-  const rotateY = useSpring(0, {
+const rotateY = useSpring(0, {
     stiffness: 180,
     damping: 18,
-  });
+});
 
-  // Cursor position
-  const glowX = useMotionValue(50);
-  const glowY = useMotionValue(50);
+// Cursor position
+const glowX = useMotionValue(50);
+const glowY = useMotionValue(50);
 
-  const handleMouseMove = (
+const handleMouseMove = (
     event: React.MouseEvent<HTMLElement>,
-  ) => {
+) => {
     const card = cardRef.current;
-
+    
     if (!card) return;
-
+    
     const rect = card.getBoundingClientRect();
-
+    
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-
+    
     const percentX = (x / rect.width) * 100;
     const percentY = (y / rect.height) * 100;
-
+    
     // Spotlight position
     glowX.set(percentX);
     glowY.set(percentY);
+    
+    
 
     // 3D tilt
     const tiltX =
-      ((y / rect.height) - 0.5) * -8;
-
+    ((y / rect.height) - 0.5) * -8;
+    
     const tiltY =
-      ((x / rect.width) - 0.5) * 8;
-
+    ((x / rect.width) - 0.5) * 8;
+    
     rotateX.set(tiltX);
     rotateY.set(tiltY);
   };
@@ -96,6 +100,10 @@ export default function ProjectCard({
         duration: 0.6,
         delay: index * 0.1,
       }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.12}
+      whileTap={{ scale: 0.98 }}
       style={{
         rotateX,
         rotateY,
@@ -232,7 +240,7 @@ export default function ProjectCard({
                 group-hover:text-white
             "
         >
-            View case study
+            Explore project
         </span>
 
         <span

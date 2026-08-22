@@ -1,6 +1,10 @@
 import Hero from '@/components/hero/Hero';
-import ProjectsSection from '../components/projects/ProjectsSection';
 import PageTransition from '@/components/transitions/PageTransition';
+import ProjectsSection from '../components/projects/ProjectsSection';
+// import ProjectCarousel from '@/components/projects/ProjectCarousel';
+import ProjectShowcase from '@/components/projects/ProjectShowcase';
+import AboutSection from '@/components/about/AboutSection';
+
 
 export default function Home() {
   return (
@@ -10,15 +14,64 @@ export default function Home() {
         <Hero />
 
         <ProjectsSection />
+        {/* <section
+          id="projects"
+          className="px-6 py-32"
+        >
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-16">
+              <p className="text-sm uppercase tracking-[0.25em] text-violet-300">
+                01 — Work
+              </p>
+
+              <h2 className="mt-4 text-5xl font-semibold tracking-tight md:text-7xl">
+                Selected projects.
+              </h2>
+
+              <p className="mt-5 max-w-xl text-[var(--muted)]">
+                A selection of systems, applications and experiments
+                I've built.
+              </p>
+            </div>
+
+            <ProjectCarousel />
+          </div>
+        </section> */}
 
         <section
+          id="projects"
+          className="px-6 py-32 md:py-40"
+        >
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-16">
+              <p className="text-sm uppercase tracking-[0.25em] text-violet-300">
+                01 — Work
+              </p>
+
+              <h2 className="mt-4 text-5xl font-semibold tracking-tight md:text-7xl">
+                Selected projects.
+              </h2>
+
+              <p className="mt-5 max-w-xl text-[var(--muted)]">
+                Systems, applications and experiments built from
+                ideas into working products.
+              </p>
+            </div>
+
+            <ProjectShowcase />
+          </div>
+        </section>
+
+        {/* <section
           id="about"
           className="flex min-h-screen items-center justify-center"
         >
           <h2 className="text-4xl font-bold">
             About
           </h2>
-        </section>
+        </section> */}
+        <AboutSection />
+
 
         <section
           id="lab"
