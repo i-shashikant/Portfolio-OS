@@ -25,18 +25,17 @@ type SpeechRecognitionInstance = {
   continuous: boolean;
   interimResults: boolean;
   lang: string;
-
   start: () => void;
   stop: () => void;
   abort: () => void;
-
   onstart: (() => void) | null;
   onend: (() => void) | null;
   onresult: ((event: SpeechRecognitionEvent) => void) | null;
   onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
 };
 
-type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
+type SpeechRecognitionConstructor =
+  new () => SpeechRecognitionInstance;
 
 declare global {
   interface Window {
@@ -55,18 +54,17 @@ export default function VoiceButton({
   const transcriptCallbackRef = useRef(onTranscript);
 
   const [isListening, setIsListening] = useState(false);
-  const [isSupported, setIsSupported] = useState(true);
 
   /*
-   * Always keep the latest callback without
-   * recreating the speech recognition instance.
+   * Keep the latest callback without recreating
+   * the speech recognition instance.
    */
   useEffect(() => {
     transcriptCallbackRef.current = onTranscript;
   }, [onTranscript]);
 
   /*
-   * Create SpeechRecognition ONLY ONCE.
+   * Create SpeechRecognition only once.
    */
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -76,7 +74,6 @@ export default function VoiceButton({
       window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setIsSupported(false);
       return;
     }
 
@@ -131,7 +128,9 @@ export default function VoiceButton({
     const recognition = recognitionRef.current;
 
     if (!recognition) {
-      console.warn('Speech recognition is not available.');
+      console.warn(
+        'Speech recognition is not available.',
+      );
       return;
     }
 
@@ -156,6 +155,17 @@ export default function VoiceButton({
       setIsListening(false);
     }
   };
+
+  /*
+   * Browser support is checked here instead of using
+   * state updated inside the effect.
+   */
+  const isSupported =
+    typeof window !== 'undefined' &&
+    Boolean(
+      window.SpeechRecognition ||
+        window.webkitSpeechRecognition,
+    );
 
   if (!isSupported) {
     return (

@@ -24,6 +24,8 @@ type PortfolioState = {
   activeProjectIndex: number;
   osEntered: boolean;
 
+  gesturesEnabled: boolean;
+
   enterOS: () => void;
   goHome: () => void;
   openSection: (section: PortfolioSection) => void;
@@ -32,6 +34,7 @@ type PortfolioState = {
   previousProject: () => void;
   openProject: (slug: string) => void;
   setActiveProject: (index: number) => void;
+  toggleGestures: () => void;
 };
 
 const PortfolioContext = createContext<PortfolioState | null>(null);
@@ -49,6 +52,11 @@ export function PortfolioProvider({
 
 
   const [osEntered, setOsEntered] = useState(false);
+
+  const [gesturesEnabled, setGesturesEnabled] = useState(false);
+  const toggleGestures = useCallback(() => {
+    setGesturesEnabled((current) => !current);
+  }, []);
 
   const setActiveProject = useCallback((index: number) => {
     if (index < 0 || index >= projects.length) return;
@@ -130,6 +138,8 @@ export function PortfolioProvider({
       activeProjectIndex,
       osEntered,
 
+      gesturesEnabled,
+
       enterOS,
       goHome,
       openSection,
@@ -138,11 +148,13 @@ export function PortfolioProvider({
       previousProject,
       openProject,
       setActiveProject,
+      toggleGestures,
     }),
     [
       section,
       activeProjectIndex,
       osEntered,
+      gesturesEnabled,
       enterOS,
       goHome,
       openSection,
@@ -150,6 +162,7 @@ export function PortfolioProvider({
       previousProject,
       openProject,
       setActiveProject,
+      toggleGestures,
     ],
   );
 
