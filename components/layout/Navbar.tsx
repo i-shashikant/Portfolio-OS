@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Menu, X, Sparkles } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa6';
 import { useState } from 'react';
-
+import { usePortfolio } from '@/stores/portfolio-store';
 import Container from '@/components/ui/Container';
 import { socials } from '@/data/socials';
 
@@ -25,6 +25,11 @@ export default function Navbar() {
 
     setOpen(false);
   };
+
+  const {
+  gesturesEnabled,
+  toggleGestures,
+} = usePortfolio();
 
   return (
     <motion.header
@@ -80,6 +85,58 @@ export default function Navbar() {
             >
               <Sparkles size={16} />
               <span>AI</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleGestures}
+              aria-label={
+                gesturesEnabled
+                  ? 'Disable gesture control'
+                  : 'Enable gesture control'
+              }
+              title={
+                gesturesEnabled
+                  ? 'Disable gesture control'
+                  : 'Enable gesture control'
+              }
+              className={`
+                flex items-center gap-2
+                rounded-full
+                border
+                px-4 py-2
+                text-xs
+                transition-all duration-300
+                ${
+                  gesturesEnabled
+                    ? `
+                      border-emerald-400/30
+                      bg-emerald-400/10
+                      text-emerald-300
+                    `
+                    : `
+                      border-white/10
+                      bg-white/[0.03]
+                      text-white/50
+                      hover:border-white/20
+                      hover:bg-white/[0.07]
+                      hover:text-white
+                    `
+                }
+              `}
+            >
+              <span
+                className={`
+                  h-2 w-2 rounded-full
+                  ${
+                    gesturesEnabled
+                      ? 'bg-emerald-400'
+                      : 'bg-white/20'
+                  }
+                `}
+              />
+
+              Gestures
             </button>
 
             {/* Mobile menu */}
