@@ -2,6 +2,8 @@
 
 import { FormEvent, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePortfolio } from '@/stores/portfolio-store';
+import { projects } from '@/data/projects';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -9,6 +11,12 @@ type Message = {
 };
 
 export default function PortfolioAI() {
+  const {
+    openSection,
+    openProject,
+    goHome,
+  } = usePortfolio();
+
   const [open, setOpen] = useState(false);
 
   const [messages, setMessages] = useState<Message[]>([
@@ -22,9 +30,212 @@ export default function PortfolioAI() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
+  /*
+   * -------------------------------------------------------
+   * PORTFOLIO NAVIGATION
+   * -------------------------------------------------------
+   *
+   * Important:
+   * We ONLY navigate when the user explicitly asks
+   * Portfolio AI to navigate somewhere.
+   *
+   * Example:
+   *
+   * "What are his ML projects?"
+   * -> AI answers normally
+   *
+   * "Show me his projects"
+   * -> Opens Projects
+   *
+   * "Tell me about CampusChaupal"
+   * -> AI answers normally
+   *
+   * "Open CampusChaupal"
+   * -> Opens CampusChaupal
+   */
+
+  const handlePortfolioAction = (userMessage: string) => {
+    const text = userMessage.toLowerCase().trim();
+
+    /*
+     * -------------------------------------------------------
+     * HOME
+     * -------------------------------------------------------
+     */
+
+    if (
+      text === 'home' ||
+      text === 'go home' ||
+      text === 'take me home' ||
+      text.includes('go back home') ||
+      text.includes('return home')
+    ) {
+      goHome();
+      return;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * EXPLICIT PROJECT NAVIGATION
+     * -------------------------------------------------------
+     */
+
+    const wantsProjectNavigation =
+      text.includes('open ') ||
+      text.includes('show me ') ||
+      text.includes('show ') ||
+      text.includes('go to ') ||
+      text.includes('take me to ') ||
+      text.includes('view ') ||
+      text.includes('visit ');
+
+    if (wantsProjectNavigation) {
+      const project = projects.find((item) => {
+        const title = item.title.toLowerCase();
+        const slug = item.slug.toLowerCase();
+
+        return text.includes(title) || text.includes(slug);
+      });
+
+      if (project) {
+        openProject(project.slug);
+        return;
+      }
+    }
+
+    /*
+     * -------------------------------------------------------
+     * PROJECTS / WORK SECTION
+     * -------------------------------------------------------
+     */
+
+    if (
+      text === 'projects' ||
+      text === 'project' ||
+      text === 'work' ||
+      text === 'my work' ||
+      text === 'show my work' ||
+      text === 'show projects' ||
+      text === 'show me projects' ||
+      text === 'open projects' ||
+      text === 'open my projects' ||
+      text === 'go to projects' ||
+      text === 'go to my projects' ||
+      text === 'view projects' ||
+      text === 'view my projects'
+    ) {
+      openSection('projects');
+      return;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * SKILLS
+     * -------------------------------------------------------
+     */
+
+    if (
+      text === 'skills' ||
+      text === 'skill' ||
+      text === 'show skills' ||
+      text === 'show me skills' ||
+      text === 'open skills' ||
+      text === 'go to skills' ||
+      text === 'view skills' ||
+      text === 'technology' ||
+      text === 'technologies' ||
+      text === 'tech stack' ||
+      text === 'show tech stack' ||
+      text === 'open tech stack'
+    ) {
+      openSection('skills');
+      return;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * ABOUT
+     * -------------------------------------------------------
+     */
+
+    if (
+      text === 'about' ||
+      text === 'show about' ||
+      text === 'show me about' ||
+      text === 'open about' ||
+      text === 'go to about' ||
+      text === 'view about' ||
+      text === 'about me' ||
+      text === 'about shashikant'
+    ) {
+      openSection('about');
+      return;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * LAB
+     * -------------------------------------------------------
+     */
+
+    if (
+      text === 'lab' ||
+      text === 'show lab' ||
+      text === 'show me the lab' ||
+      text === 'open lab' ||
+      text === 'go to lab' ||
+      text === 'view lab' ||
+      text === 'experiments' ||
+      text === 'show experiments' ||
+      text === 'open experiments'
+    ) {
+      openSection('lab');
+      return;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * CONTACT
+     * -------------------------------------------------------
+     */
+
+    if (
+      text === 'contact' ||
+      text === 'show contact' ||
+      text === 'show me contact' ||
+      text === 'open contact' ||
+      text === 'go to contact' ||
+      text === 'view contact' ||
+      text === 'contact me' ||
+      text === 'hire me'
+    ) {
+      openSection('contact');
+      return;
+    }
+
+    /*
+     * -------------------------------------------------------
+     * NO NAVIGATION
+     * -------------------------------------------------------
+     *
+     * If the user's message doesn't explicitly request
+     * navigation, do nothing.
+     *
+     * The Gemini response remains purely conversational.
+     */
+
+    return;
+  };
+
+  /*
+   * -------------------------------------------------------
+   * SUBMIT MESSAGE
+   * -------------------------------------------------------
+   */
+
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>,
-    ) => {
+  ) => {
     event.preventDefault();
 
     const query = input.trim();
@@ -34,56 +245,68 @@ export default function PortfolioAI() {
     setInput('');
 
     setMessages((current) => [
-        ...current,
-        {
+      ...current,
+      {
         role: 'user',
         content: query,
-        },
+      },
     ]);
 
     setIsTyping(true);
 
     try {
-        const response = await fetch('/api/ai/chat', {
+      const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            query,
+          query,
         }),
-        });
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok) {
+      if (!response.ok) {
         throw new Error(
-            data?.error || 'Failed to get AI response.',
+          data?.error || 'Failed to get AI response.',
         );
-        }
+      }
 
-        setMessages((current) => [
+      /*
+       * Add AI response to chat
+       */
+
+      setMessages((current) => [
         ...current,
         {
-            role: 'assistant',
-            content: data.answer,
+          role: 'assistant',
+          content: data.answer,
         },
-        ]);
-    } catch (error) {
-        console.error(error);
+      ]);
 
-        setMessages((current) => [
+      /*
+       * Use `query`, NOT `input`.
+       *
+       * `input` was already cleared above.
+       */
+
+      handlePortfolioAction(query);
+    } catch (error) {
+      console.error(error);
+
+      setMessages((current) => [
         ...current,
         {
-            role: 'assistant',
-            content:
+          role: 'assistant',
+          content:
             'Sorry, Portfolio AI is temporarily unavailable. Please try again.',
         },
-        ]);
+      ]);
     } finally {
-        setIsTyping(false);
+      setIsTyping(false);
     }
-    };
+  };
 
   return (
     <>
