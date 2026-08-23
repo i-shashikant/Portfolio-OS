@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePortfolio } from '@/stores/portfolio-store';
 import { projects } from '@/data/projects';
+import VoiceButton from '@/components/ai/VoiceButton';
 
 type Message = {
   role: 'user' | 'assistant';
@@ -488,7 +489,7 @@ export default function PortfolioAI() {
               onSubmit={handleSubmit}
               className="border-t border-white/10 p-4"
             >
-              <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/20 p-2">
+              <div className="flex items-center gap-2">
                 <input
                   value={input}
                   onChange={(event) => setInput(event.target.value)}
@@ -505,7 +506,12 @@ export default function PortfolioAI() {
                     placeholder:text-white/20
                   "
                 />
-
+                <VoiceButton
+                  onTranscript={(text) => {
+                    setInput(text);
+                  }}
+                  disabled={isTyping}
+                />
                 <button
                   type="submit"
                   disabled={!input.trim() || isTyping}
