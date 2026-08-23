@@ -8,6 +8,7 @@ import SkillsSection from '@/components/skills/SkillsSection';
 import LabSection from "@/components/lab/LabSection";
 import ContactSection from '@/components/contact/ContactSection';
 import Footer from '@/components/layout/Footer';
+import PortfolioAI from '@/components/ai/PortfolioAI';
 
 
 
@@ -55,6 +56,7 @@ export default function Home() {
 
         <ContactSection />
         <Footer />
+        <PortfolioAI />
       </main>
     </PageTransition>
   );
