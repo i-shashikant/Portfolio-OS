@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GitBranch, Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
+import { FaGithub } from 'react-icons/fa6';
 import { useState } from 'react';
 
 import Container from '@/components/ui/Container';
@@ -71,7 +72,7 @@ export default function Navbar() {
               className="hidden rounded-xl p-2.5 text-white/60 transition hover:bg-white/5 hover:text-white sm:block"
               aria-label="GitHub"
             >
-              <GitBranch size={18} />
+              <FaGithub size={18} />
             </a>
 
             <button

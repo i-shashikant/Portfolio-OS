@@ -4,16 +4,16 @@ import { motion } from 'framer-motion';
 
 const highlights = [
   {
-    value: '3+',
-    label: 'Major Projects',
+    value: '03',
+    label: 'Featured Projects',
   },
   {
     value: 'AI',
     label: 'Focused Development',
   },
   {
-    value: 'Full',
-    label: 'Stack Capabilities',
+    value: '∞',
+    label: 'Things Left to Build',
   },
 ];
 
@@ -45,7 +45,7 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-4xl text-4xl font-semibold tracking-tight md:text-6xl"
+          className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl"
         >
           I like building things that sit between{' '}
           <span className="text-white/40">

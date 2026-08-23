@@ -4,6 +4,9 @@ import ProjectsSection from '../components/projects/ProjectsSection';
 // import ProjectCarousel from '@/components/projects/ProjectCarousel';
 import ProjectShowcase from '@/components/projects/ProjectShowcase';
 import AboutSection from '@/components/about/AboutSection';
+import SkillsSection from '@/components/skills/SkillsSection';
+import LabSection from "@/components/lab/LabSection";
+import ContactSection from '@/components/contact/ContactSection';
 
 
 export default function Home() {
@@ -69,27 +72,14 @@ export default function Home() {
           <h2 className="text-4xl font-bold">
             About
           </h2>
-        </section> */}
+        </section> */} 
         <AboutSection />
 
+        <SkillsSection />
 
-        <section
-          id="lab"
-          className="flex min-h-screen items-center justify-center"
-        >
-          <h2 className="text-4xl font-bold">
-            Lab
-          </h2>
-        </section>
+        <LabSection />
 
-        <section
-          id="contact"
-          className="flex min-h-screen items-center justify-center"
-        >
-          <h2 className="text-4xl font-bold">
-            Contact
-          </h2>
-        </section>
+        <ContactSection />
       </main>
     </PageTransition>
   );
