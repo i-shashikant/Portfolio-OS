@@ -7,6 +7,13 @@ export type Project = {
   featured?: boolean;
   github?: string;
   live?: string;
+
+  caseStudy?: {
+    overview: string;
+    problem: string;
+    solution: string;
+    highlights: string[];
+  };
 };
 
 export const projects: Project[] = [
@@ -24,6 +31,26 @@ export const projects: Project[] = [
       'Pinia',
     ],
     featured: true,
+    github : "https://github.com/i-shashikant/Placement-Portal-MAD-II",
+    caseStudy: {
+      overview:
+        'CampusChaupal is a full-stack placement platform designed to connect students, companies, and administrators through a structured campus recruitment ecosystem.',
+
+      problem:
+        'Campus placement workflows can become fragmented across students, companies, applications, approvals, and placement drives.',
+
+      solution:
+        'Built a role-based platform where students can discover and apply for opportunities, companies can manage placement drives and applications, and administrators can manage the overall ecosystem.',
+
+      highlights: [
+        'Role-based authentication and authorization',
+        'Student job discovery and applications',
+        'Company placement drive management',
+        'Application status workflow',
+        'Administrative approval and moderation',
+        'Vue 3 frontend with Flask backend',
+      ],
+    },
   },
 
   {
@@ -39,6 +66,26 @@ export const projects: Project[] = [
       'Jinja2',
     ],
     featured: true,
+    github : "https://github.com/i-shashikant/Trekking-Management-App",
+    caseStudy: {
+      overview:
+        'GoGhummi is a trekking management platform focused on discovering trails, managing trekking experiences, and handling bookings across different user roles.',
+
+      problem:
+        'Managing treks, users, bookings, and staff operations requires multiple workflows to work together reliably.',
+
+      solution:
+        'Built a role-based web application with Flask and SQLAlchemy to manage trekking experiences, bookings, users, and administrative operations.',
+
+      highlights: [
+        'Trekking discovery and management',
+        'Booking workflow',
+        'Role-based access',
+        'Admin and staff operations',
+        'SQLAlchemy database models',
+        'Flask blueprint architecture',
+      ],
+    },
   },
 
   {
@@ -54,5 +101,25 @@ export const projects: Project[] = [
       'CatBoost',
     ],
     featured: true,
+    github : "https://github.com/i-shashikant/Heavy-Equipment-Price-Prediction-MLP",
+    caseStudy: {
+      overview:
+        'A machine learning project focused on predicting heavy equipment selling prices using structured data, feature engineering, categorical encoding, and model experimentation.',
+
+      problem:
+        'Heavy equipment prices depend on multiple characteristics such as age, configuration, location, and equipment attributes, making direct price estimation challenging.',
+
+      solution:
+        'Built a machine learning pipeline involving exploratory analysis, feature engineering, categorical encoding, and experimentation with multiple regression models.',
+
+      highlights: [
+        'Feature engineering',
+        'Categorical feature handling',
+        'Model experimentation',
+        'Regression-based price prediction',
+        'Machine learning evaluation',
+        'Kaggle competition workflow',
+      ],
+    },
   },
 ];

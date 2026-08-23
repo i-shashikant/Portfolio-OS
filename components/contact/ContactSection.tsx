@@ -95,7 +95,7 @@ export default function ContactSection() {
             {/* Social links */}
             <div className="flex items-center gap-3">
               <a
-                href="#"
+                href="https://github.com/i-shashikant"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
@@ -105,7 +105,7 @@ export default function ContactSection() {
               </a>
 
               <a
-                href="#"
+                href="https://linkedin.com/in/i-shashikant"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
