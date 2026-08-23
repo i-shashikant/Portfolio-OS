@@ -7,9 +7,12 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import Link from 'next/link';
+import { usePortfolio } from '@/stores/portfolio-store';
+import ParticleField from '@/components/hero/ParticleField';
 
 export default function Hero() {
+
+  const { osEntered, openSection } = usePortfolio();
   const prefersReducedMotion = useReducedMotion();
 
   const mouseX = useMotionValue(0);
@@ -27,6 +30,16 @@ export default function Hero() {
 
   const glowX = useTransform(smoothX, [-1, 1], ['20%', '80%']);
   const glowY = useTransform(smoothY, [-1, 1], ['20%', '80%']);
+  const contentX = useTransform(
+    smoothX,
+    [-1, 1],
+    [-12, 12],
+  );
+  const contentY = useTransform(
+    smoothY,
+    [-1, 1],
+    [-8, 8],
+  );
 
   const handleMouseMove = (
     event: React.MouseEvent<HTMLElement>,
@@ -55,6 +68,7 @@ export default function Hero() {
         px-6
       "
     >
+      <ParticleField />
       {/* Ambient cursor glow */}
       <motion.div
         className="
@@ -82,7 +96,12 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl">
+      <motion.div className="relative z-10 mx-auto w-full max-w-6xl"
+        style={{
+          x: prefersReducedMotion ? 0 : contentX,
+          y: prefersReducedMotion ? 0 : contentY,
+        }}
+      >
         {/* Eyebrow */}
         <motion.div
           initial={{
@@ -90,8 +109,8 @@ export default function Hero() {
             y: 20,
           }}
           animate={{
-            opacity: 1,
-            y: 0,
+            opacity: osEntered ? 1: 0,
+            y: osEntered ?  0 : 20,
           }}
           transition={{
             duration: 0.7,
@@ -112,8 +131,8 @@ export default function Hero() {
             y: 30,
           }}
           animate={{
-            opacity: 1,
-            y: 0,
+            opacity: osEntered ? 1: 0,
+            y: osEntered ?  0 : 30,
           }}
           transition={{
             duration: 0.8,
@@ -139,23 +158,42 @@ export default function Hero() {
             y: 25,
           }}
           animate={{
-            opacity: 1,
-            y: 0,
+            opacity: osEntered ? 1 : 0,
+            y: osEntered ? 0 : 25,
           }}
           transition={{
             duration: 0.8,
             delay: 0.2,
           }}
           className="
-            mt-8 max-w-2xl
-            text-base leading-7
+            mt-8
+            max-w-3xl
+            text-base
+            leading-7
             text-[var(--muted)]
-            md:text-lg md:leading-8
+            md:text-lg
+            md:leading-8
           "
         >
-          I build data-driven products, software systems,
-          and AI-powered experiments — turning ideas into
-          things people can actually use.
+          <span className="text-white">
+            AI Engineer
+          </span>
+          {' · '}
+          <span className="text-white/60">
+            Full Stack Developer
+          </span>
+          {' · '}
+          <span className="text-white/40">
+            Problem Solver
+          </span>
+
+          <br />
+
+          <span className="text-white/45">
+            I build data-driven products, software systems,
+            and AI-powered experiments — turning ideas into
+            things people can actually use.
+          </span>
         </motion.p>
 
         {/* Actions */}
@@ -165,8 +203,8 @@ export default function Hero() {
             y: 20,
           }}
           animate={{
-            opacity: 1,
-            y: 0,
+            opacity: osEntered ? 1: 0,
+            y: osEntered ?  0 : 20,
           }}
           transition={{
             duration: 0.7,
@@ -174,8 +212,9 @@ export default function Hero() {
           }}
           className="mt-10 flex flex-wrap gap-4"
         >
-          <Link
-            href="#projects"
+          <button
+            type="button"
+            onClick={() => openSection('projects')}
             className="
               group inline-flex items-center
               gap-3 rounded-full
@@ -190,12 +229,12 @@ export default function Hero() {
             <span
               className="
                 transition-transform duration-300
-                group-hover:translate-x-1
+                group-hover:translate-y-1
               "
             >
               ↓
             </span>
-          </Link>
+          </button>
 
           <a
             href="https://github.com/i-shashikant"
@@ -219,7 +258,7 @@ export default function Hero() {
             <span>↗</span>
           </a>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
@@ -227,7 +266,7 @@ export default function Hero() {
           opacity: 0,
         }}
         animate={{
-          opacity: 1,
+          opacity: osEntered ? 1: 0,
         }}
         transition={{
           delay: 1.2,

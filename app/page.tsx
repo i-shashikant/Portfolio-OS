@@ -10,6 +10,7 @@ import ContactSection from '@/components/contact/ContactSection';
 
 
 
+
 export default function Home() {
   return (
     <PageTransition>
@@ -44,16 +45,7 @@ export default function Home() {
 
             <ProjectShowcase />
           </div>
-        </section>
-
-        {/* <section
-          id="about"
-          className="flex min-h-screen items-center justify-center"
-        >
-          <h2 className="text-4xl font-bold">
-            About
-          </h2>
-        </section> */} 
+        </section> 
         <AboutSection />
 
         <SkillsSection />

@@ -5,6 +5,7 @@ import PortfolioKeyboard from '@/components/layout/PortfolioKeyboard';
 import { PortfolioProvider } from '@/stores/portfolio-store';
 import PortfolioHUD from '@/components/layout/PortfolioHUD';
 import OSBootScreen from '@/components/os/OSBootScreen';
+import KeyboardController from '@/components/os/KeyboardController';
 
 import './globals.css';
 
@@ -27,6 +28,7 @@ export default function RootLayout({
           <PortfolioKeyboard />
           <PortfolioHUD />
           <Navbar />
+          <KeyboardController />
           {children}
         </PortfolioProvider>
       </body>
