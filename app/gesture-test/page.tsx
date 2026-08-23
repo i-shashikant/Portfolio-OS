@@ -16,6 +16,9 @@ export default function GestureTestPage() {
     processGesture,
   } = useGestureControl();
 
+  const [clickFlash, setClickFlash] =
+    useState(false);
+
   const [cursorPosition, setCursorPosition] =
     useState({
       x: 50,
@@ -23,16 +26,41 @@ export default function GestureTestPage() {
     });
 
   /*
-   * Smoothed cursor position.
-   *
-   * We keep this in a ref so the smoothing
-   * value survives between frames without
-   * causing extra React renders.
+   * ==========================================
+   * SMOOTH CURSOR
+   * ==========================================
    */
+
   const smoothCursor = useRef({
     x: 50,
     y: 50,
   });
+
+  /*
+   * ==========================================
+   * GESTURE HANDLER
+   * ==========================================
+   */
+
+  const handleGesture = (
+    gesture: Parameters<
+      typeof processGesture
+    >[0]
+  ) => {
+    processGesture(gesture);
+
+    /*
+     * Visual feedback when FIST is detected.
+     */
+
+    if (gesture === "FIST") {
+      setClickFlash(true);
+
+      window.setTimeout(() => {
+        setClickFlash(false);
+      }, 180);
+    }
+  };
 
   /*
    * ==========================================
@@ -45,14 +73,9 @@ export default function GestureTestPage() {
     y: number
   ) => {
     /*
-     * MediaPipe X is opposite to our
-     * mirrored camera preview.
+     * The camera preview is mirrored.
      *
-     * Therefore:
-     *
-     *     targetX = 1 - x
-     *
-     * Y does not need to be inverted.
+     * Therefore we invert MediaPipe's X.
      */
 
     const targetX =
@@ -62,13 +85,13 @@ export default function GestureTestPage() {
       y * 100;
 
     /*
-     * Exponential smoothing.
+     * Cursor smoothing.
      *
-     * Lower = smoother/slower
-     * Higher = faster/more responsive
+     * 0.4 gives us a good balance between
+     * responsiveness and stability.
      */
 
-    const smoothing = 0.25;
+    const smoothing = 0.4;
 
     smoothCursor.current.x +=
       (targetX -
@@ -79,10 +102,6 @@ export default function GestureTestPage() {
       (targetY -
         smoothCursor.current.y) *
       smoothing;
-
-    /*
-     * Update the visible cursor.
-     */
 
     setCursorPosition({
       x: smoothCursor.current.x,
@@ -97,28 +116,71 @@ export default function GestureTestPage() {
    */
 
   return (
-    <div
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        background: "#050505",
-      }}
-    >
-      {/* =====================================
-          HAND TRACKER
-          ===================================== */}
+    <>
+      <div
+        style={{
+          position: "relative",
+          minHeight: "100vh",
+          background: "#050505",
+        }}
+      >
+        {/* =====================================
+            HAND TRACKER
+            ===================================== */}
 
-      <HandTracker
-        onGesture={processGesture}
-        onCursorMove={handleCursorMove}
-      />
+        <HandTracker
+          onGesture={handleGesture}
+          onCursorMove={handleCursorMove}
+        />
 
-      {/* =====================================
-          VIRTUAL CURSOR
-          ===================================== */}
+        {/* =====================================
+            VIRTUAL CURSOR
+            ===================================== */}
 
-      {active &&
-        gesture === "POINT" && (
+        {active &&
+          gesture === "POINT" && (
+            <div
+              style={{
+                position: "fixed",
+
+                left:
+                  `${cursorPosition.x}%`,
+
+                top:
+                  `${cursorPosition.y}%`,
+
+                width: "24px",
+
+                height: "24px",
+
+                border:
+                  "2px solid white",
+
+                borderRadius:
+                  "50%",
+
+                transform:
+                  "translate(-50%, -50%)",
+
+                pointerEvents:
+                  "none",
+
+                zIndex: 99999,
+
+                boxShadow:
+                  "0 0 20px rgba(255,255,255,0.8)",
+
+                transition:
+                  "transform 0.05s linear",
+              }}
+            />
+          )}
+
+        {/* =====================================
+            CLICK FLASH
+            ===================================== */}
+
+        {clickFlash && (
           <div
             style={{
               position: "fixed",
@@ -129,8 +191,9 @@ export default function GestureTestPage() {
               top:
                 `${cursorPosition.y}%`,
 
-              width: "24px",
-              height: "24px",
+              width: "60px",
+
+              height: "60px",
 
               border:
                 "2px solid white",
@@ -144,81 +207,103 @@ export default function GestureTestPage() {
               pointerEvents:
                 "none",
 
-              zIndex: 99999,
+              zIndex: 100000,
 
-              boxShadow:
-                "0 0 20px rgba(255,255,255,0.8)",
-
-              transition:
-                "transform 0.05s linear",
+              animation:
+                "gestureClick 180ms ease-out",
             }}
           />
         )}
 
-      {/* =====================================
-          DEBUG PANEL
-          ===================================== */}
+        {/* =====================================
+            DEBUG PANEL
+            ===================================== */}
 
-      <div
-        style={{
-          position: "fixed",
+        <div
+          style={{
+            position: "fixed",
 
-          top: "20px",
+            top: "20px",
 
-          right: "20px",
+            right: "20px",
 
-          padding: "16px",
+            padding: "16px",
 
-          background:
-            "rgba(0,0,0,0.85)",
+            background:
+              "rgba(0,0,0,0.85)",
 
-          border:
-            "1px solid #333",
+            border:
+              "1px solid #333",
 
-          color: "white",
+            color: "white",
 
-          fontFamily:
-            "monospace",
+            fontFamily:
+              "monospace",
 
-          fontSize: "13px",
+            fontSize: "13px",
 
-          lineHeight: 1.7,
+            lineHeight: 1.7,
 
-          zIndex: 100000,
+            zIndex: 100001,
 
-          minWidth: "220px",
-        }}
-      >
-        <div>
-          GESTURE:{" "}
-          {gesture}
-        </div>
+            minWidth: "220px",
+          }}
+        >
+          <div>
+            GESTURE:{" "}
+            {gesture}
+          </div>
 
-        <div>
-          ACTIVE:{" "}
-          {active
-            ? "YES"
-            : "NO"}
-        </div>
+          <div>
+            ACTIVE:{" "}
+            {active
+              ? "YES"
+              : "NO"}
+          </div>
 
-        <div>
-          CURSOR:{" "}
-          {Math.round(
-            cursorPosition.x
-          )}
-          % ×{" "}
-          {Math.round(
-            cursorPosition.y
-          )}
-          %
-        </div>
+          <div>
+            CURSOR:{" "}
+            {Math.round(
+              cursorPosition.x
+            )}
+            % ×{" "}
+            {Math.round(
+              cursorPosition.y
+            )}
+            %
+          </div>
 
-        <div>
-          EVENT:{" "}
-          {lastEvent?.type ??
-            "NONE"}
+          <div>
+            EVENT:{" "}
+            {lastEvent?.type ??
+              "NONE"}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* =======================================
+          CLICK ANIMATION
+          ======================================= */}
+
+      <style jsx>{`
+        @keyframes gestureClick {
+          0% {
+            transform:
+              translate(-50%, -50%)
+              scale(0.4);
+
+            opacity: 1;
+          }
+
+          100% {
+            transform:
+              translate(-50%, -50%)
+              scale(1.4);
+
+            opacity: 0;
+          }
+        }
+      `}</style>
+    </>
   );
 }
