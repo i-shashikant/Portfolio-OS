@@ -73,7 +73,7 @@ export default function LabSection() {
             Experiments, ideas,
             <br />
             <span className="text-white/30">
-              and things I'm building.
+              and things I&apos;m building.
             </span>
           </h2>
 

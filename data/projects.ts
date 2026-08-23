@@ -32,7 +32,7 @@ export const projects: Project[] = [
     ],
     featured: true,
     github : "https://github.com/i-shashikant/Placement-Portal-MAD-II",
-    caseStudy: {
+    caseStudy : {
       overview:
         'CampusChaupal is a full-stack placement platform designed to connect students, companies, and administrators through a structured campus recruitment ecosystem.',
 

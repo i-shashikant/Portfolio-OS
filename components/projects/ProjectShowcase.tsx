@@ -8,12 +8,17 @@ import {
   useReducedMotion,
 } from 'framer-motion';
 import Link from 'next/link';
-import { useState } from 'react';
+import { usePortfolio } from '@/stores/portfolio-store';
 
 import { projects } from '@/data/projects';
 
 export default function ProjectShowcase() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const {
+    activeProjectIndex,
+    nextProject,
+    previousProject,
+    setActiveProject,
+  } = usePortfolio();
   const prefersReducedMotion = useReducedMotion();
 
   const dragX = useMotionValue(0);
@@ -23,19 +28,10 @@ export default function ProjectShowcase() {
     damping: 30,
   });
 
-  const project = projects[activeIndex];
+  const project = projects[activeProjectIndex];
 
-  const next = () => {
-    setActiveIndex((current) =>
-      current === projects.length - 1 ? 0 : current + 1,
-    );
-  };
-
-  const previous = () => {
-    setActiveIndex((current) =>
-      current === 0 ? projects.length - 1 : current - 1,
-    );
-  };
+  const next = nextProject;
+  const previous = previousProject;
 
   const handleDragEnd = (
     _: MouseEvent | TouchEvent | PointerEvent,
@@ -57,7 +53,7 @@ export default function ProjectShowcase() {
         </span>
 
         <span className="font-mono text-sm text-white/30">
-          {String(activeIndex + 1).padStart(2, '0')} /{' '}
+          {String(activeProjectIndex + 1).padStart(2, '0')} /{' '}
           {String(projects.length).padStart(2, '0')}
         </span>
       </div>
@@ -144,7 +140,7 @@ export default function ProjectShowcase() {
                   {/* Top */}
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-sm text-white/30">
-                      0{activeIndex + 1}
+                      0{activeProjectIndex + 1}
                     </span>
 
                     <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/50">
@@ -216,12 +212,12 @@ export default function ProjectShowcase() {
               key={item.slug}
               type="button"
               aria-label={`View ${item.title}`}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => setActiveProject(index)}
               className={`
                 h-1.5 rounded-full
                 transition-all duration-300
                 ${
-                  index === activeIndex
+                  index === activeProjectIndex
                     ? 'w-10 bg-white'
                     : 'w-3 bg-white/20 hover:bg-white/40'
                 }

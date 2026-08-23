@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 
 import Navbar from '@/components/layout/Navbar';
+import PortfolioKeyboard from '@/components/layout/PortfolioKeyboard';
+import { PortfolioProvider } from '@/stores/portfolio-store';
 
 import './globals.css';
 
@@ -18,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-
-        {children}
+        <PortfolioProvider>
+          <PortfolioKeyboard />
+          <Navbar />
+          {children}
+        </PortfolioProvider>
       </body>
     </html>
   );

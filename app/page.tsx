@@ -14,32 +14,12 @@ export default function Home() {
     <PageTransition>
       <main>
 
-        <Hero />
+        <section id="hero">
+          <Hero />
+        </section>
 
         <ProjectsSection />
-        {/* <section
-          id="projects"
-          className="px-6 py-32"
-        >
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-16">
-              <p className="text-sm uppercase tracking-[0.25em] text-violet-300">
-                01 — Work
-              </p>
 
-              <h2 className="mt-4 text-5xl font-semibold tracking-tight md:text-7xl">
-                Selected projects.
-              </h2>
-
-              <p className="mt-5 max-w-xl text-[var(--muted)]">
-                A selection of systems, applications and experiments
-                I've built.
-              </p>
-            </div>
-
-            <ProjectCarousel />
-          </div>
-        </section> */}
 
         <section
           id="projects"
