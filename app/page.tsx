@@ -7,6 +7,7 @@ import AboutSection from '@/components/about/AboutSection';
 import SkillsSection from '@/components/skills/SkillsSection';
 import LabSection from "@/components/lab/LabSection";
 import ContactSection from '@/components/contact/ContactSection';
+import Footer from '@/components/layout/Footer';
 
 
 
@@ -53,6 +54,7 @@ export default function Home() {
         <LabSection />
 
         <ContactSection />
+        <Footer />
       </main>
     </PageTransition>
   );

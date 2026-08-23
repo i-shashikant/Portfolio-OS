@@ -1,126 +1,300 @@
+// 'use client';
+
+// import { motion } from 'framer-motion';
+// import { ArrowUpRight, Mail} from 'lucide-react';
+// import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
+
+// export default function ContactSection() {
+//   return (
+//     <section
+//       id="contact"
+//       className="relative flex min-h-screen items-center overflow-hidden py-24"
+//     >
+//       <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
+//         {/* Section label */}
+//         <motion.div
+//           initial={{ opacity: 0, y: 20 }}
+//           whileInView={{ opacity: 1, y: 0 }}
+//           viewport={{ once: true }}
+//           transition={{ duration: 0.6 }}
+//           className="mb-10 flex items-center gap-3"
+//         >
+//           <span className="h-2 w-2 rounded-full bg-violet-400" />
+//           <span className="text-xs font-medium uppercase tracking-[0.35em] text-white/40">
+//             Contact
+//           </span>
+//         </motion.div>
+
+//         {/* Main heading */}
+//         <motion.h2
+//           initial={{ opacity: 0, y: 30 }}
+//           whileInView={{ opacity: 1, y: 0 }}
+//           viewport={{ once: true }}
+//           transition={{ duration: 0.7 }}
+//           className="max-w-5xl text-5xl font-semibold tracking-tight text-white md:text-7xl lg:text-8xl"
+//         >
+//           Have an idea?
+//           <br />
+//           <span className="text-white/30">Let&apos;s build it.</span>
+//         </motion.h2>
+
+//         {/* Description */}
+//         <motion.p
+//           initial={{ opacity: 0, y: 25 }}
+//           whileInView={{ opacity: 1, y: 0 }}
+//           viewport={{ once: true }}
+//           transition={{ duration: 0.7, delay: 0.1 }}
+//           className="mt-10 max-w-2xl text-base leading-8 text-[var(--muted)] md:text-lg"
+//         >
+//           I&apos;m always interested in interesting products, experiments,
+//           collaborations, and opportunities where software, data, and AI come
+//           together.
+//         </motion.p>
+
+//         {/* CTA */}
+//         <motion.a
+//           href="mailto:shashi873kant@gmail.com"
+//           initial={{ opacity: 0, y: 20 }}
+//           whileInView={{ opacity: 1, y: 0 }}
+//           viewport={{ once: true }}
+//           transition={{ duration: 0.7, delay: 0.2 }}
+//           whileHover={{ y: -3 }}
+//           className="group mt-10 inline-flex items-center gap-3 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-all duration-300 hover:bg-violet-400"
+//         >
+//           <Mail size={17} />
+//           Get in touch
+//           <ArrowUpRight
+//             size={17}
+//             className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+//           />
+//         </motion.a>
+
+//         {/* Bottom area */}
+//         <motion.div
+//           initial={{ opacity: 0 }}
+//           whileInView={{ opacity: 1 }}
+//           viewport={{ once: true }}
+//           transition={{ duration: 0.8, delay: 0.3 }}
+//           className="mt-24 border-t border-white/10 pt-8"
+//         >
+//           <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+//             {/* Email */}
+//             <div>
+//               <p className="mb-2 text-xs uppercase tracking-[0.25em] text-white/30">
+//                 Email
+//               </p>
+
+//               <a
+//                 href="mailto:shashi873kant@gmail.com"
+//                 className="text-sm text-white/70 transition-colors hover:text-white"
+//               >
+//                 shashi873kant@gmail.com
+//               </a>
+//             </div>
+
+//             {/* Social links */}
+//             <div className="flex items-center gap-3">
+//               <a
+//                 href="https://github.com/i-shashikant"
+//                 target="_blank"
+//                 rel="noopener noreferrer"
+//                 aria-label="GitHub"
+//                 className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/50 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
+//               >
+//                 <FaGithub size={18} />
+//               </a>
+
+//               <a
+//                 href="https://linkedin.com/in/i-shashikant"
+//                 target="_blank"
+//                 rel="noopener noreferrer"
+//                 aria-label="LinkedIn"
+//                 className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/50 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
+//               >
+//                 <FaLinkedinIn size={18} />
+//               </a>
+//             </div>
+//           </div>
+
+//           {/* Footer */}
+//           <div className="mt-12 flex flex-col gap-2 text-xs text-white/25 md:flex-row md:items-center md:justify-between">
+//             <span>© 2026 Shashikant</span>
+//             <span>Portfolio OS</span>
+//           </div>
+//         </motion.div>
+//       </div>
+//     </section>
+//   );
+// }
+
+
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Mail} from 'lucide-react';
-import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
+import { usePortfolio } from '@/stores/portfolio-store';
 
 export default function ContactSection() {
+  const { osEntered } = usePortfolio();
+
   return (
     <section
       id="contact"
-      className="relative flex min-h-screen items-center overflow-hidden py-24"
+      className="relative overflow-hidden px-6 py-32 md:py-40"
     >
-      <div className="mx-auto w-full max-w-7xl px-6 md:px-10">
-        {/* Section label */}
+      {/* Ambient glow */}
+      <div
+        className="
+          pointer-events-none absolute
+          left-1/2 top-1/2
+          h-[600px] w-[600px]
+          -translate-x-1/2 -translate-y-1/2
+          rounded-full
+          bg-violet-500/[0.04]
+          blur-[150px]
+        "
+      />
+
+      <div className="relative z-10 mx-auto max-w-6xl">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={{
+            opacity: osEntered ? 1 : 0,
+            y: osEntered ? 0 : 20,
+          }}
           transition={{ duration: 0.6 }}
-          className="mb-10 flex items-center gap-3"
+          className="mb-16 flex items-center gap-4"
         >
-          <span className="h-2 w-2 rounded-full bg-violet-400" />
-          <span className="text-xs font-medium uppercase tracking-[0.35em] text-white/40">
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-400/70">
+            04
+          </span>
+
+          <span className="h-px w-12 bg-white/10" />
+
+          <span className="text-xs uppercase tracking-[0.25em] text-white/30">
             Contact
           </span>
         </motion.div>
 
-        {/* Main heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="max-w-5xl text-5xl font-semibold tracking-tight text-white md:text-7xl lg:text-8xl"
-        >
-          Have an idea?
-          <br />
-          <span className="text-white/30">Let&apos;s build it.</span>
-        </motion.h2>
-
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="mt-10 max-w-2xl text-base leading-8 text-[var(--muted)] md:text-lg"
-        >
-          I&apos;m always interested in interesting products, experiments,
-          collaborations, and opportunities where software, data, and AI come
-          together.
-        </motion.p>
-
-        {/* CTA */}
-        <motion.a
-          href="mailto:shashi873kant@gmail.com"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          whileHover={{ y: -3 }}
-          className="group mt-10 inline-flex items-center gap-3 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-all duration-300 hover:bg-violet-400"
-        >
-          <Mail size={17} />
-          Get in touch
-          <ArrowUpRight
-            size={17}
-            className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-          />
-        </motion.a>
-
-        {/* Bottom area */}
+        {/* Main */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-24 border-t border-white/10 pt-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{
+            opacity: osEntered ? 1 : 0,
+            y: osEntered ? 0 : 30,
+          }}
+          transition={{
+            duration: 0.8,
+            delay: 0.1,
+          }}
+          className="
+            relative
+            overflow-hidden
+            rounded-[2rem]
+            border border-white/10
+            bg-white/[0.025]
+            px-7 py-16
+            md:px-16 md:py-24
+          "
         >
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            {/* Email */}
-            <div>
-              <p className="mb-2 text-xs uppercase tracking-[0.25em] text-white/30">
-                Email
-              </p>
+          {/* Grid */}
+          <div
+            className="
+              pointer-events-none absolute inset-0
+              opacity-[0.025]
+              [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)]
+              [background-size:64px_64px]
+            "
+          />
 
+          <div className="relative z-10">
+            <p className="text-xs uppercase tracking-[0.25em] text-violet-300/50">
+              Have an idea?
+            </p>
+
+            <h2 className="mt-6 max-w-4xl text-5xl font-medium tracking-tight text-white/90 md:text-7xl">
+              Let's build something
+              <span className="text-white/25"> interesting.</span>
+            </h2>
+
+            <p className="mt-7 max-w-2xl text-base leading-8 text-white/35 md:text-lg">
+              Whether it's an internship, a project, an experiment, or just
+              an interesting problem worth solving — I'm always open to
+              building something meaningful.
+            </p>
+
+            {/* Actions */}
+            <div className="mt-10 flex flex-wrap gap-4">
               <a
-                href="mailto:shashi873kant@gmail.com"
-                className="text-sm text-white/70 transition-colors hover:text-white"
+                href="mailto:your-email@example.com"
+                className="
+                  group
+                  inline-flex
+                  items-center
+                  gap-3
+                  rounded-full
+                  bg-white
+                  px-7 py-3.5
+                  text-sm
+                  font-medium
+                  text-black
+                  transition-transform
+                  duration-300
+                  hover:scale-[1.03]
+                "
               >
-                shashi873kant@gmail.com
-              </a>
-            </div>
+                Get in touch
 
-            {/* Social links */}
-            <div className="flex items-center gap-3">
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </a>
+
               <a
                 href="https://github.com/i-shashikant"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/50 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
+                className="
+                  inline-flex
+                  items-center
+                  gap-2
+                  rounded-full
+                  border border-white/10
+                  bg-white/[0.03]
+                  px-7 py-3.5
+                  text-sm
+                  text-white/50
+                  transition-all
+                  duration-300
+                  hover:border-white/20
+                  hover:bg-white/[0.07]
+                  hover:text-white
+                "
               >
-                <FaGithub size={18} />
-              </a>
-
-              <a
-                href="https://linkedin.com/in/i-shashikant"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/50 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
-              >
-                <FaLinkedinIn size={18} />
+                GitHub
+                <span>↗</span>
               </a>
             </div>
           </div>
+        </motion.div>
 
-          {/* Footer */}
-          <div className="mt-12 flex flex-col gap-2 text-xs text-white/25 md:flex-row md:items-center md:justify-between">
-            <span>© 2026 Shashikant</span>
-            <span>Portfolio OS</span>
-          </div>
+        {/* Availability */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: osEntered ? 1 : 0,
+          }}
+          transition={{
+            duration: 0.8,
+            delay: 0.5,
+          }}
+          className="mt-8 flex items-center gap-3"
+        >
+          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+
+          <span className="text-xs uppercase tracking-[0.2em] text-white/25">
+            Open to opportunities
+          </span>
         </motion.div>
       </div>
     </section>
