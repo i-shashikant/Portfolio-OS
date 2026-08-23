@@ -6,6 +6,7 @@ import { usePortfolio } from '@/stores/portfolio-store';
 
 export function usePortfolioKeyboard() {
   const {
+    osEntered,
     enterOS,
     goHome,
     openSection,
@@ -25,6 +26,18 @@ export function usePortfolioKeyboard() {
       ) {
         return;
       }
+
+        // Enter is always available.
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        enterOS();
+        return;
+    }
+
+    // Don't allow Portfolio OS shortcuts before entering.
+    if (!osEntered) {
+        return;
+    }
 
       switch (event.key) {
         case 'Enter':
@@ -91,6 +104,7 @@ export function usePortfolioKeyboard() {
       );
     };
   }, [
+    osEntered,
     enterOS,
     goHome,
     openSection,
