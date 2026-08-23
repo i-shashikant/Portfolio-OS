@@ -9,6 +9,7 @@ import LabSection from "@/components/lab/LabSection";
 import ContactSection from '@/components/contact/ContactSection';
 
 
+
 export default function Home() {
   return (
     <PageTransition>
