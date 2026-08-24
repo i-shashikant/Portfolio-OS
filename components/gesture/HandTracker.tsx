@@ -22,11 +22,14 @@ interface HandTrackerProps {
     x: number,
     y: number
   ) => void;
+
+  compact?: boolean;
 }
 
 export default function HandTracker({
     onGesture,
     onCursorMove,
+    compact = false,
 }: HandTrackerProps) {
   const videoRef =
     useRef<HTMLVideoElement | null>(null);

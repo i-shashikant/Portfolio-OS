@@ -19,6 +19,9 @@ export default function GestureTestPage() {
   const [clickFlash, setClickFlash] =
     useState(false);
 
+
+  const [hoveredElement, setHoveredElement] =
+  useState<HTMLElement | null>(null);
   const [cursorPosition, setCursorPosition] =
     useState({
       x: 50,
@@ -68,46 +71,35 @@ export default function GestureTestPage() {
    * ==========================================
    */
 
-  const handleCursorMove = (
-    x: number,
-    y: number
-  ) => {
-    /*
-     * The camera preview is mirrored.
-     *
-     * Therefore we invert MediaPipe's X.
-     */
+  const handleCursorMove = (x: number, y: number) => {
+  const targetX = (1 - x) * window.innerWidth;
+  const targetY = y * window.innerHeight;
 
-    const targetX =
-      (1 - x) * 100;
+  const smoothing = 0.75;
 
-    const targetY =
-      y * 100;
+  smoothCursor.current.x +=
+    (targetX - smoothCursor.current.x) * smoothing;
 
-    /*
-     * Cursor smoothing.
-     *
-     * 0.4 gives us a good balance between
-     * responsiveness and stability.
-     */
+  smoothCursor.current.y +=
+    (targetY - smoothCursor.current.y) * smoothing;
 
-    const smoothing = 0.4;
+  setCursorPosition({
+    x: smoothCursor.current.x,
+    y: smoothCursor.current.y,
+  });
 
-    smoothCursor.current.x +=
-      (targetX -
-        smoothCursor.current.x) *
-      smoothing;
+  // Find the element under the virtual cursor
+  const element = document.elementFromPoint(
+    smoothCursor.current.x,
+    smoothCursor.current.y,
+  ) as HTMLElement | null;
 
-    smoothCursor.current.y +=
-      (targetY -
-        smoothCursor.current.y) *
-      smoothing;
+  const clickable = element?.closest(
+    "[data-gesture-target]",
+  ) as HTMLElement | null;
 
-    setCursorPosition({
-      x: smoothCursor.current.x,
-      y: smoothCursor.current.y,
-    });
-  };
+  setHoveredElement(clickable);
+};
 
   /*
    * ==========================================
@@ -131,7 +123,10 @@ export default function GestureTestPage() {
         <HandTracker
           onGesture={handleGesture}
           onCursorMove={handleCursorMove}
+          compact
         />
+
+        
 
         {/* =====================================
             VIRTUAL CURSOR
@@ -280,6 +275,7 @@ export default function GestureTestPage() {
           </div>
         </div>
       </div>
+      
 
       {/* =======================================
           CLICK ANIMATION
