@@ -6,6 +6,7 @@ import { PortfolioProvider } from '@/stores/portfolio-store';
 import PortfolioHUD from '@/components/layout/PortfolioHUD';
 import OSBootScreen from '@/components/os/OSBootScreen';
 import KeyboardController from '@/components/os/KeyboardController';
+import OSDesktop from "@/components/os/OSDesktop";
 
 import './globals.css';
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body>
         <PortfolioProvider>
           <OSBootScreen />
+          <OSDesktop />
           <PortfolioKeyboard />
           <PortfolioHUD />
           <Navbar />
