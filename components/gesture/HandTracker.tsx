@@ -23,13 +23,21 @@ interface HandTrackerProps {
     y: number
   ) => void;
 
+  onPinchMove?: (
+    thumbX: number,
+    thumbY: number,
+    indexX: number,
+    indexY: number
+  ) => void;
+
   compact?: boolean;
 }
 
 export default function HandTracker({
-    onGesture,
-    onCursorMove,
-    compact = false,
+  onGesture,
+  onCursorMove,
+  onPinchMove,
+  compact = false,
 }: HandTrackerProps) {
   const videoRef =
     useRef<HTMLVideoElement | null>(null);
@@ -106,7 +114,8 @@ export default function HandTracker({
 
         streamRef.current = stream;
 
-        const video = videoRef.current;
+        const video =
+          videoRef.current;
 
         if (!video) {
           throw new Error(
@@ -168,11 +177,6 @@ export default function HandTracker({
          * ==========================================
          * 3. HAND LANDMARKER
          * ==========================================
-         *
-         * CPU is intentionally used first.
-         *
-         * We already confirmed this configuration
-         * successfully initializes in your browser.
          */
 
         const handLandmarker =
@@ -231,11 +235,6 @@ export default function HandTracker({
           const landmarker =
             handLandmarkerRef.current;
 
-          /*
-           * If something isn't ready yet,
-           * keep the loop alive.
-           */
-
           if (
             !currentVideo ||
             !landmarker
@@ -272,14 +271,17 @@ export default function HandTracker({
                 );
 
               /*
-               * Draw landmarks.
+               * Draw landmarks only when
+               * using the testing interface.
                */
 
-              drawResults(result);
+              if (!compact) {
+                drawResults(result);
+              }
 
               /*
                * Determine whether a hand
-               * exists in the frame.
+               * exists.
                */
 
               const detected =
@@ -290,46 +292,73 @@ export default function HandTracker({
               );
 
               /*
-               * Classify the gesture.
+               * =====================================
+               * HAND DETECTED
+               * =====================================
                */
 
               if (detected) {
-  const landmarks =
-    result.landmarks[0];
+                const landmarks =
+                  result.landmarks[0];
 
-  const detectedGesture =
-    classifyGesture(
-      landmarks
-    );
+                /*
+                 * -------------------------------------
+                 * GESTURE
+                 * -------------------------------------
+                 */
 
-  setGesture(
-    detectedGesture
-  );
+                const detectedGesture =
+                  classifyGesture(
+                    landmarks
+                  );
 
-  /*
-   * Send gesture to parent.
-   */
+                setGesture(
+                  detectedGesture
+                );
 
-  onGesture?.(
-    detectedGesture
-  );
+                onGesture?.(
+                  detectedGesture
+                );
 
-  /*
-   * Index fingertip = landmark 8.
-   */
+                /*
+                 * -------------------------------------
+                 * INDEX FINGERTIP
+                 * -------------------------------------
+                 *
+                 * Landmark 8 = index fingertip.
+                 */
 
-  const indexTip =
-    landmarks[8];
+                const indexTip =
+                  landmarks[8];
 
-  onCursorMove?.(
-    indexTip.x,
-    indexTip.y
-  );
-} else {
-  setGesture(
-    "UNKNOWN"
-  );
-}
+                onCursorMove?.(
+                  indexTip.x,
+                  indexTip.y
+                );
+
+                /*
+                 * -------------------------------------
+                 * PINCH LANDMARKS
+                 * -------------------------------------
+                 *
+                 * Landmark 4 = thumb tip.
+                 * Landmark 8 = index fingertip.
+                 */
+
+                const thumbTip =
+                  landmarks[4];
+
+                onPinchMove?.(
+                  thumbTip.x,
+                  thumbTip.y,
+                  indexTip.x,
+                  indexTip.y
+                );
+              } else {
+                setGesture(
+                  "UNKNOWN"
+                );
+              }
             } catch (
               trackingError
             ) {
@@ -433,11 +462,17 @@ export default function HandTracker({
 
       if (videoRef.current) {
         videoRef.current.pause();
+
         videoRef.current.srcObject =
           null;
       }
     };
-  }, []);
+  }, [
+    compact,
+    onGesture,
+    onCursorMove,
+    onPinchMove,
+  ]);
 
   /*
    * ==========================================
@@ -577,7 +612,7 @@ export default function HandTracker({
       ctx.stroke();
 
       /*
-       * Landmark points
+       * Landmark points.
        */
 
       for (
@@ -605,7 +640,54 @@ export default function HandTracker({
 
   /*
    * ==========================================
-   * UI
+   * COMPACT MODE
+   * ==========================================
+   *
+   * Tracking continues, but the large
+   * testing interface is hidden.
+   *
+   * The video is kept in the DOM because
+   * MediaPipe needs it as its input source.
+   */
+
+  if (compact) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+          opacity: 0,
+          pointerEvents: "none",
+          zIndex: -1,
+        }}
+        aria-hidden="true"
+      >
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          autoPlay
+          style={{
+            width: "1px",
+            height: "1px",
+          }}
+        />
+
+        <canvas
+          ref={canvasRef}
+          style={{
+            display: "none",
+          }}
+        />
+      </div>
+    );
+  }
+
+  /*
+   * ==========================================
+   * TESTING PAGE UI
    * ==========================================
    */
 
@@ -624,7 +706,8 @@ export default function HandTracker({
     >
       <div
         style={{
-          width: "min(100%, 1100px)",
+          width:
+            "min(100%, 1100px)",
         }}
       >
         {/* HEADER */}
@@ -660,22 +743,12 @@ export default function HandTracker({
 
         <div
           style={{
-            position:
-              "relative",
-
+            position: "relative",
             width: "100%",
-
-            aspectRatio:
-              "16 / 9",
-
-            overflow:
-              "hidden",
-
-            background:
-              "#111",
-
-            border:
-              "1px solid #333",
+            aspectRatio: "16 / 9",
+            overflow: "hidden",
+            background: "#111",
+            border: "1px solid #333",
           }}
         >
           {/* VIDEO */}
@@ -695,8 +768,7 @@ export default function HandTracker({
 
               height: "100%",
 
-              objectFit:
-                "cover",
+              objectFit: "cover",
 
               transform:
                 "scaleX(-1)",
@@ -717,8 +789,7 @@ export default function HandTracker({
 
               height: "100%",
 
-              objectFit:
-                "cover",
+              objectFit: "cover",
 
               transform:
                 "scaleX(-1)",
@@ -954,6 +1025,23 @@ export default function HandTracker({
             👍
             <br />
             THUMBS_UP
+          </div>
+
+          <div
+            style={{
+              padding:
+                "14px",
+
+              border:
+                "1px solid #222",
+
+              background:
+                "#0b0b0b",
+            }}
+          >
+            🤏
+            <br />
+            PINCH
           </div>
         </div>
       </div>
