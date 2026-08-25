@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   FilesetResolver,
   HandLandmarker,
-  HandLandmarkerResult,
+  type HandLandmarkerResult,
 } from "@mediapipe/tasks-vision";
 
 import {
@@ -14,9 +14,7 @@ import {
 } from "./GestureClassifier";
 
 interface HandTrackerProps {
-  onGesture?: (
-    gesture: Gesture
-  ) => void;
+  onGesture?: (gesture: Gesture) => void;
 
   onCursorMove?: (
     x: number,
@@ -54,6 +52,9 @@ export default function HandTracker({
   const streamRef =
     useRef<MediaStream | null>(null);
 
+  const lastVideoTimeRef =
+    useRef(-1);
+
   const [status, setStatus] =
     useState("Starting...");
 
@@ -69,15 +70,117 @@ export default function HandTracker({
   useEffect(() => {
     let mounted = true;
 
+    const createLandmarker =
+      async (
+        vision: Awaited<
+          ReturnType<
+            typeof FilesetResolver.forVisionTasks
+          >
+        >
+      ) => {
+        /*
+         * ==========================================
+         * TRY GPU FIRST
+         * ==========================================
+         */
+
+        try {
+          console.log(
+            "[Gesture] Trying GPU..."
+          );
+
+          const gpuLandmarker =
+            await HandLandmarker.createFromOptions(
+              vision,
+              {
+                baseOptions: {
+                  modelAssetPath:
+                    "/models/hand_landmarker.task",
+
+                  delegate: "GPU",
+                },
+
+                runningMode: "VIDEO",
+
+                numHands: 1,
+
+                minHandDetectionConfidence:
+                  0.5,
+
+                minHandPresenceConfidence:
+                  0.5,
+
+                minTrackingConfidence:
+                  0.5,
+              }
+            );
+
+          console.log(
+            "[Gesture] GPU initialized"
+          );
+
+          return gpuLandmarker;
+        } catch (gpuError) {
+          console.warn(
+            "[Gesture] GPU unavailable. Falling back to CPU.",
+            gpuError
+          );
+        }
+
+        /*
+         * ==========================================
+         * CPU FALLBACK
+         * ==========================================
+         */
+
+        console.log(
+          "[Gesture] Trying CPU..."
+        );
+
+        const cpuLandmarker =
+          await HandLandmarker.createFromOptions(
+            vision,
+            {
+              baseOptions: {
+                modelAssetPath:
+                  "/models/hand_landmarker.task",
+
+                delegate: "CPU",
+              },
+
+              runningMode: "VIDEO",
+
+              numHands: 1,
+
+              minHandDetectionConfidence:
+                0.5,
+
+              minHandPresenceConfidence:
+                0.5,
+
+              minTrackingConfidence:
+                0.5,
+            }
+          );
+
+        console.log(
+          "[Gesture] CPU initialized"
+        );
+
+        return cpuLandmarker;
+      };
+
     const start = async () => {
       try {
         /*
          * ==========================================
-         * 1. CAMERA
+         * CAMERA
          * ==========================================
          */
 
-        setStatus("Requesting camera...");
+        setStatus(
+          "Requesting camera..."
+        );
 
         if (
           !navigator.mediaDevices ||
@@ -89,18 +192,35 @@ export default function HandTracker({
         }
 
         const stream =
-          await navigator.mediaDevices.getUserMedia({
-            video: {
-              width: {
-                ideal: 1280,
+          await navigator.mediaDevices.getUserMedia(
+            {
+              video: {
+                width: {
+                  ideal: 1280,
+                },
+
+                height: {
+                  ideal: 720,
+                },
+
+                facingMode: "user",
+
+                /*
+                 * Prefer a reasonable frame rate.
+                 * We don't need 60fps for hand
+                 * tracking if the model cannot
+                 * process it that quickly.
+                 */
+
+                frameRate: {
+                  ideal: 30,
+                  max: 30,
+                },
               },
-              height: {
-                ideal: 720,
-              },
-              facingMode: "user",
-            },
-            audio: false,
-          });
+
+              audio: false,
+            }
+          );
 
         if (!mounted) {
           stream
@@ -112,7 +232,8 @@ export default function HandTracker({
           return;
         }
 
-        streamRef.current = stream;
+        streamRef.current =
+          stream;
 
         const video =
           videoRef.current;
@@ -123,7 +244,12 @@ export default function HandTracker({
           );
         }
 
-        video.srcObject = stream;
+        video.srcObject =
+          stream;
+
+        /*
+         * Wait for video metadata.
+         */
 
         await new Promise<void>(
           (resolve) => {
@@ -134,11 +260,16 @@ export default function HandTracker({
               return;
             }
 
-            video.onloadedmetadata = () => {
-              resolve();
-            };
+            video.onloadedmetadata =
+              () => {
+                resolve();
+              };
           }
         );
+
+        if (!mounted) {
+          return;
+        }
 
         await video.play();
 
@@ -152,7 +283,7 @@ export default function HandTracker({
 
         /*
          * ==========================================
-         * 2. MEDIAPIPE WASM
+         * MEDIAPIPE VISION RUNTIME
          * ==========================================
          */
 
@@ -175,31 +306,13 @@ export default function HandTracker({
 
         /*
          * ==========================================
-         * 3. HAND LANDMARKER
+         * HAND LANDMARKER
          * ==========================================
          */
 
         const handLandmarker =
-          await HandLandmarker.createFromOptions(
-            vision,
-            {
-              baseOptions: {
-                modelAssetPath:
-                  "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-
-                delegate: "CPU",
-              },
-
-              runningMode: "VIDEO",
-
-              numHands: 1,
-
-              minHandDetectionConfidence: 0.5,
-
-              minHandPresenceConfidence: 0.5,
-
-              minTrackingConfidence: 0.5,
-            }
+          await createLandmarker(
+            vision
           );
 
         if (!mounted) {
@@ -210,19 +323,15 @@ export default function HandTracker({
         handLandmarkerRef.current =
           handLandmarker;
 
-        console.log(
-          "[Gesture] Hand landmarker initialized"
+        setStatus(
+          "Tracking active"
         );
-
-        setStatus("Tracking active");
 
         /*
          * ==========================================
-         * 4. DETECTION LOOP
+         * DETECTION LOOP
          * ==========================================
          */
-
-        let lastVideoTime = -1;
 
         const detect = () => {
           if (!mounted) {
@@ -248,22 +357,20 @@ export default function HandTracker({
           }
 
           /*
-           * Only process a new video frame.
+           * Only process when the camera
+           * has produced a new frame.
            */
 
           if (
-            currentVideo.readyState >= 2 &&
+            currentVideo.readyState >=
+              2 &&
             currentVideo.currentTime !==
-              lastVideoTime
+              lastVideoTimeRef.current
           ) {
-            lastVideoTime =
+            lastVideoTimeRef.current =
               currentVideo.currentTime;
 
             try {
-              /*
-               * Run MediaPipe.
-               */
-
               const result: HandLandmarkerResult =
                 landmarker.detectForVideo(
                   currentVideo,
@@ -271,40 +378,38 @@ export default function HandTracker({
                 );
 
               /*
-               * Draw landmarks only when
-               * using the testing interface.
+               * Draw only on testing page.
                */
 
               if (!compact) {
-                drawResults(result);
+                drawResults(
+                  result,
+                  currentVideo,
+                  canvasRef.current
+                );
               }
 
-              /*
-               * Determine whether a hand
-               * exists.
-               */
-
               const detected =
-                result.landmarks.length > 0;
+                result.landmarks.length >
+                0;
+
+              /*
+               * Avoid unnecessary state
+               * updates when possible.
+               */
 
               setHandDetected(
                 detected
               );
-
-              /*
-               * =====================================
-               * HAND DETECTED
-               * =====================================
-               */
 
               if (detected) {
                 const landmarks =
                   result.landmarks[0];
 
                 /*
-                 * -------------------------------------
+                 * ==================================
                  * GESTURE
-                 * -------------------------------------
+                 * ==================================
                  */
 
                 const detectedGesture =
@@ -321,57 +426,70 @@ export default function HandTracker({
                 );
 
                 /*
-                 * -------------------------------------
+                 * ==================================
                  * INDEX FINGERTIP
-                 * -------------------------------------
+                 * ==================================
                  *
-                 * Landmark 8 = index fingertip.
+                 * Landmark 8.
                  */
 
                 const indexTip =
                   landmarks[8];
 
-                onCursorMove?.(
-                  indexTip.x,
-                  indexTip.y
-                );
+                if (indexTip) {
+                  onCursorMove?.(
+                    indexTip.x,
+                    indexTip.y
+                  );
+                }
 
                 /*
-                 * -------------------------------------
+                 * ==================================
                  * PINCH LANDMARKS
-                 * -------------------------------------
+                 * ==================================
                  *
-                 * Landmark 4 = thumb tip.
-                 * Landmark 8 = index fingertip.
+                 * Thumb tip = 4
+                 * Index tip = 8
                  */
 
                 const thumbTip =
                   landmarks[4];
 
-                onPinchMove?.(
-                  thumbTip.x,
-                  thumbTip.y,
-                  indexTip.x,
-                  indexTip.y
-                );
+                if (
+                  thumbTip &&
+                  indexTip
+                ) {
+                  onPinchMove?.(
+                    thumbTip.x,
+                    thumbTip.y,
+                    indexTip.x,
+                    indexTip.y
+                  );
+                }
               } else {
                 setGesture(
                   "UNKNOWN"
                 );
+
+                /*
+                 * Reset pinch state on
+                 * hand loss.
+                 */
+
+                onPinchMove?.(
+                  0,
+                  0,
+                  1,
+                  1
+                );
               }
-            } catch (
-              trackingError
-            ) {
+            } catch (trackingError) {
               console.error(
                 "[Gesture] Detection error:",
                 trackingError
               );
             }
           }
-
-          /*
-           * Continue tracking.
-           */
 
           animationFrameRef.current =
             requestAnimationFrame(
@@ -409,10 +527,6 @@ export default function HandTracker({
     return () => {
       mounted = false;
 
-      /*
-       * Stop animation loop.
-       */
-
       if (
         animationFrameRef.current !==
         null
@@ -424,10 +538,6 @@ export default function HandTracker({
         animationFrameRef.current =
           null;
       }
-
-      /*
-       * Close MediaPipe.
-       */
 
       if (
         handLandmarkerRef.current
@@ -442,10 +552,6 @@ export default function HandTracker({
           null;
       }
 
-      /*
-       * Stop camera.
-       */
-
       if (streamRef.current) {
         streamRef.current
           .getTracks()
@@ -453,12 +559,9 @@ export default function HandTracker({
             track.stop()
           );
 
-        streamRef.current = null;
+        streamRef.current =
+          null;
       }
-
-      /*
-       * Detach video.
-       */
 
       if (videoRef.current) {
         videoRef.current.pause();
@@ -476,20 +579,16 @@ export default function HandTracker({
 
   /*
    * ==========================================
-   * DRAW HAND LANDMARKS
+   * DRAW RESULTS
    * ==========================================
    */
 
   const drawResults = (
-    result: HandLandmarkerResult
+    result: HandLandmarkerResult,
+    video: HTMLVideoElement,
+    canvas: HTMLCanvasElement | null
   ) => {
-    const video =
-      videoRef.current;
-
-    const canvas =
-      canvasRef.current;
-
-    if (!video || !canvas) {
+    if (!canvas) {
       return;
     }
 
@@ -500,10 +599,12 @@ export default function HandTracker({
       return;
     }
 
-    /*
-     * Match canvas to actual camera
-     * resolution.
-     */
+    if (
+      video.videoWidth === 0 ||
+      video.videoHeight === 0
+    ) {
+      return;
+    }
 
     canvas.width =
       video.videoWidth;
@@ -519,50 +620,40 @@ export default function HandTracker({
     );
 
     /*
-     * Hand connections.
+     * MediaPipe hand connections.
      */
 
     const connections: [
       number,
       number
     ][] = [
-      // Thumb
       [0, 1],
       [1, 2],
       [2, 3],
       [3, 4],
 
-      // Index
       [0, 5],
       [5, 6],
       [6, 7],
       [7, 8],
 
-      // Middle
       [5, 9],
       [9, 10],
       [10, 11],
       [11, 12],
 
-      // Ring
       [9, 13],
       [13, 14],
       [14, 15],
       [15, 16],
 
-      // Pinky
       [13, 17],
       [17, 18],
       [18, 19],
       [19, 20],
 
-      // Palm
       [0, 17],
     ];
-
-    /*
-     * Draw every detected hand.
-     */
 
     for (
       const landmarks of result.landmarks
@@ -612,7 +703,7 @@ export default function HandTracker({
       ctx.stroke();
 
       /*
-       * Landmark points.
+       * Landmark points
        */
 
       for (
@@ -643,11 +734,8 @@ export default function HandTracker({
    * COMPACT MODE
    * ==========================================
    *
-   * Tracking continues, but the large
-   * testing interface is hidden.
-   *
-   * The video is kept in the DOM because
-   * MediaPipe needs it as its input source.
+   * The camera remains available to
+   * MediaPipe but is completely hidden.
    */
 
   if (compact) {
@@ -687,7 +775,7 @@ export default function HandTracker({
 
   /*
    * ==========================================
-   * TESTING PAGE UI
+   * TESTING PAGE
    * ==========================================
    */
 
@@ -710,13 +798,10 @@ export default function HandTracker({
             "min(100%, 1100px)",
         }}
       >
-        {/* HEADER */}
-
         <div
           style={{
             marginBottom: "20px",
-            fontFamily:
-              "monospace",
+            fontFamily: "monospace",
           }}
         >
           <div
@@ -739,8 +824,6 @@ export default function HandTracker({
           </div>
         </div>
 
-        {/* CAMERA */}
-
         <div
           style={{
             position: "relative",
@@ -751,113 +834,72 @@ export default function HandTracker({
             border: "1px solid #333",
           }}
         >
-          {/* VIDEO */}
-
           <video
             ref={videoRef}
             muted
             playsInline
             autoPlay
             style={{
-              position:
-                "absolute",
-
+              position: "absolute",
               inset: 0,
-
               width: "100%",
-
               height: "100%",
-
               objectFit: "cover",
-
               transform:
                 "scaleX(-1)",
             }}
           />
 
-          {/* LANDMARK CANVAS */}
-
           <canvas
             ref={canvasRef}
             style={{
-              position:
-                "absolute",
-
+              position: "absolute",
               inset: 0,
-
               width: "100%",
-
               height: "100%",
-
               objectFit: "cover",
-
               transform:
                 "scaleX(-1)",
-
               pointerEvents:
                 "none",
             }}
           />
 
-          {/* STATUS */}
-
           <div
             style={{
-              position:
-                "absolute",
-
+              position: "absolute",
               left: "16px",
-
               bottom: "16px",
-
               padding:
                 "10px 14px",
-
               background:
                 "rgba(0,0,0,0.75)",
-
               border:
                 "1px solid #333",
-
               fontFamily:
                 "monospace",
-
               fontSize: "13px",
             }}
           >
             STATUS: {status}
           </div>
 
-          {/* HAND + GESTURE STATUS */}
-
           <div
             style={{
-              position:
-                "absolute",
-
+              position: "absolute",
               right: "16px",
-
               bottom: "16px",
-
               padding:
                 "10px 14px",
-
               background:
                 "rgba(0,0,0,0.75)",
-
               border:
                 "1px solid #333",
-
               fontFamily:
                 "monospace",
-
               fontSize: "13px",
-
-              textAlign:
-                "right",
-
-              minWidth:
-                "180px",
+              textAlign: "right",
+              minWidth: "180px",
             }}
           >
             <div>
@@ -869,12 +911,8 @@ export default function HandTracker({
 
             <div
               style={{
-                marginTop:
-                  "6px",
-
-                fontSize:
-                  "18px",
-
+                marginTop: "6px",
+                fontSize: "18px",
                 fontWeight: 700,
               }}
             >
@@ -883,32 +921,18 @@ export default function HandTracker({
           </div>
         </div>
 
-        {/* ERROR */}
-
         {error && (
           <div
             style={{
-              marginTop:
-                "20px",
-
-              padding:
-                "16px",
-
-              background:
-                "#160808",
-
+              marginTop: "20px",
+              padding: "16px",
+              background: "#160808",
               border:
                 "1px solid #5c2020",
-
-              color:
-                "#ff8a8a",
-
+              color: "#ff8a8a",
               fontFamily:
                 "monospace",
-
-              fontSize:
-                "13px",
-
+              fontSize: "13px",
               whiteSpace:
                 "pre-wrap",
             }}
@@ -923,69 +947,23 @@ export default function HandTracker({
           </div>
         )}
 
-        {/* GESTURE GUIDE */}
-
         <div
           style={{
-            marginTop:
-              "20px",
-
-            display:
-              "grid",
-
+            marginTop: "20px",
+            display: "grid",
             gridTemplateColumns:
               "repeat(auto-fit, minmax(140px, 1fr))",
-
             gap: "10px",
-
             fontFamily:
               "monospace",
           }}
         >
           <div
             style={{
-              padding:
-                "14px",
-
+              padding: "14px",
               border:
                 "1px solid #222",
-
-              background:
-                "#0b0b0b",
-            }}
-          >
-            ✋
-            <br />
-            OPEN_PALM
-          </div>
-
-          <div
-            style={{
-              padding:
-                "14px",
-
-              border:
-                "1px solid #222",
-
-              background:
-                "#0b0b0b",
-            }}
-          >
-            ✊
-            <br />
-            FIST
-          </div>
-
-          <div
-            style={{
-              padding:
-                "14px",
-
-              border:
-                "1px solid #222",
-
-              background:
-                "#0b0b0b",
+              background: "#0b0b0b",
             }}
           >
             ☝️
@@ -995,31 +973,10 @@ export default function HandTracker({
 
           <div
             style={{
-              padding:
-                "14px",
-
+              padding: "14px",
               border:
                 "1px solid #222",
-
-              background:
-                "#0b0b0b",
-            }}
-          >
-            ✌️
-            <br />
-            PEACE
-          </div>
-
-          <div
-            style={{
-              padding:
-                "14px",
-
-              border:
-                "1px solid #222",
-
-              background:
-                "#0b0b0b",
+              background: "#0b0b0b",
             }}
           >
             👍
@@ -1029,14 +986,10 @@ export default function HandTracker({
 
           <div
             style={{
-              padding:
-                "14px",
-
+              padding: "14px",
               border:
                 "1px solid #222",
-
-              background:
-                "#0b0b0b",
+              background: "#0b0b0b",
             }}
           >
             🤏

@@ -2,6 +2,7 @@
 
 import {
   useCallback,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -40,8 +41,6 @@ export default function GestureController() {
    * ==========================================
    * THUMBS UP CLICK CONTROL
    * ==========================================
-   *
-   * THUMBS_UP = SELECT
    */
 
   const thumbsUpActive =
@@ -57,8 +56,17 @@ export default function GestureController() {
    * PINCH SCROLL CONTROL
    * ==========================================
    *
-   * Thumb + index close together
-   * = scrolling mode.
+   * We use two thresholds.
+   *
+   * ENTER:
+   *   distance < 0.055
+   *
+   * EXIT:
+   *   distance > 0.070
+   *
+   * This prevents the pinch state from
+   * flickering when MediaPipe coordinates
+   * move slightly from frame to frame.
    */
 
   const pinchActive =
@@ -67,27 +75,80 @@ export default function GestureController() {
   const lastPinchY =
     useRef<number | null>(null);
 
-  /*
-   * Distance required for pinch.
-   *
-   * MediaPipe coordinates are normalized
-   * between 0 and 1.
-   */
+  const PINCH_ENTER_DISTANCE = 0.055;
 
-  const PINCH_DISTANCE = 0.055;
+  const PINCH_EXIT_DISTANCE = 0.070;
 
   /*
-   * Ignore tiny movements caused by
-   * camera noise.
+   * ==========================================
+   * SCROLL TUNING
+   * ==========================================
    */
 
-  const SCROLL_DEAD_ZONE = 0.004;
-
-  /*
-   * Increase this for faster scrolling.
-   */
+  const SCROLL_DEAD_ZONE = 0.0035;
 
   const SCROLL_SPEED = 1800;
+
+  /*
+   * ==========================================
+   * SCROLL FRAME QUEUE
+   * ==========================================
+   *
+   * We don't call window.scrollBy()
+   * directly from every MediaPipe frame.
+   *
+   * Instead, we collect the movement and
+   * apply it once per browser animation frame.
+   */
+
+  const pendingScroll =
+    useRef(0);
+
+  const scrollFrame =
+    useRef<number | null>(null);
+
+  const queueScroll =
+    useCallback((amount: number) => {
+      pendingScroll.current += amount;
+
+      if (
+        scrollFrame.current !== null
+      ) {
+        return;
+      }
+
+      scrollFrame.current =
+        requestAnimationFrame(() => {
+          const amount =
+            pendingScroll.current;
+
+          pendingScroll.current = 0;
+
+          scrollFrame.current = null;
+
+          if (
+            Math.abs(amount) < 0.01
+          ) {
+            return;
+          }
+
+          /*
+           * Prevent a single noisy frame
+           * from producing a huge jump.
+           */
+
+          const limitedAmount =
+            Math.max(
+              -40,
+              Math.min(40, amount)
+            );
+
+          window.scrollBy({
+            top: limitedAmount,
+            behavior: "auto",
+          });
+        });
+    }, []);
 
   /*
    * ==========================================
@@ -97,7 +158,16 @@ export default function GestureController() {
 
   const handleGesture = useCallback(
     (nextGesture: Gesture) => {
-      setGesture(nextGesture);
+      /*
+       * Don't cause a React render if the
+       * gesture hasn't actually changed.
+       */
+
+      setGesture((current) =>
+        current === nextGesture
+          ? current
+          : nextGesture
+      );
 
       /*
        * ----------------------------------------
@@ -110,11 +180,6 @@ export default function GestureController() {
       ) {
         const now =
           performance.now();
-
-        /*
-         * Only click once while
-         * thumbs-up is held.
-         */
 
         if (
           !thumbsUpActive.current &&
@@ -132,21 +197,21 @@ export default function GestureController() {
         }
 
         /*
-         * Leaving any previous pinch
-         * state when thumbs-up appears.
+         * Reset pinch when changing to
+         * thumbs-up.
          */
 
         pinchActive.current =
           false;
 
-        lastPinchY.current = null;
+        lastPinchY.current =
+          null;
 
         return;
       }
 
       /*
-       * Leaving THUMBS_UP allows the
-       * next thumbs-up to click again.
+       * Leaving THUMBS_UP.
        */
 
       thumbsUpActive.current =
@@ -167,11 +232,6 @@ export default function GestureController() {
         x: number,
         y: number
       ) => {
-        /*
-         * MediaPipe X is mirrored
-         * relative to the screen.
-         */
-
         const targetX =
           (1 - x) * 100;
 
@@ -179,8 +239,8 @@ export default function GestureController() {
           y * 100;
 
         /*
-         * Higher = faster
-         * Lower = smoother
+         * Keep the exact cursor smoothing
+         * that was already working.
          */
 
         const smoothing = 0.75;
@@ -221,8 +281,7 @@ export default function GestureController() {
         indexY: number
       ) => {
         /*
-         * Calculate distance between
-         * thumb and index finger.
+         * Calculate thumb/index distance.
          */
 
         const dx =
@@ -235,17 +294,44 @@ export default function GestureController() {
           dx * dx + dy * dy
         );
 
-        const isPinching =
-          distance <
-          PINCH_DISTANCE;
-
         /*
          * ----------------------------------------
-         * NOT PINCHING
+         * PINCH ENTER
          * ----------------------------------------
          */
 
-        if (!isPinching) {
+        if (
+          !pinchActive.current &&
+          distance <
+            PINCH_ENTER_DISTANCE
+        ) {
+          pinchActive.current =
+            true;
+
+          /*
+           * Start from current position.
+           */
+
+          lastPinchY.current =
+            indexY;
+
+          return;
+        }
+
+        /*
+         * ----------------------------------------
+         * PINCH EXIT
+         * ----------------------------------------
+         *
+         * Notice that the exit threshold is
+         * larger than the enter threshold.
+         */
+
+        if (
+          pinchActive.current &&
+          distance >
+            PINCH_EXIT_DISTANCE
+        ) {
           pinchActive.current =
             false;
 
@@ -256,23 +342,12 @@ export default function GestureController() {
         }
 
         /*
-         * ----------------------------------------
-         * ENTER PINCH MODE
-         * ----------------------------------------
+         * Not pinching yet.
          */
 
-        if (!pinchActive.current) {
-          pinchActive.current =
-            true;
-
-          /*
-           * Use the current index position
-           * as the starting reference.
-           */
-
-          lastPinchY.current =
-            indexY;
-
+        if (
+          !pinchActive.current
+        ) {
           return;
         }
 
@@ -291,7 +366,7 @@ export default function GestureController() {
 
         /*
          * ----------------------------------------
-         * CALCULATE VERTICAL MOVEMENT
+         * VERTICAL MOVEMENT
          * ----------------------------------------
          */
 
@@ -300,40 +375,37 @@ export default function GestureController() {
           lastPinchY.current;
 
         /*
-         * Ignore tiny movements.
-         */
-
-        if (
-          Math.abs(delta) >
-          SCROLL_DEAD_ZONE
-        ) {
-          /*
-           * Positive MediaPipe Y =
-           * hand moving downward.
-           *
-           * Therefore:
-           *
-           * hand down  → page down
-           * hand up    → page up
-           */
-
-          window.scrollBy({
-            top:
-              delta *
-              SCROLL_SPEED,
-
-            behavior: "auto",
-          });
-        }
-
-        /*
-         * Store current position.
+         * Always update the reference,
+         * even when the movement is too small.
+         *
+         * This prevents accumulated movement
+         * from suddenly causing a large jump.
          */
 
         lastPinchY.current =
           indexY;
+
+        /*
+         * Ignore camera noise.
+         */
+
+        if (
+          Math.abs(delta) <
+          SCROLL_DEAD_ZONE
+        ) {
+          return;
+        }
+
+        /*
+         * Queue the scroll instead of
+         * executing it immediately.
+         */
+
+        queueScroll(
+          delta * SCROLL_SPEED
+        );
       },
-      []
+      [queueScroll]
     );
 
   /*
@@ -344,11 +416,6 @@ export default function GestureController() {
 
   const performVirtualClick =
     () => {
-      /*
-       * Convert percentage cursor
-       * coordinates into pixels.
-       */
-
       const x =
         (smoothCursor.current.x /
           100) *
@@ -406,6 +473,28 @@ export default function GestureController() {
         );
       }
     };
+
+  /*
+   * ==========================================
+   * CLEANUP
+   * ==========================================
+   */
+
+  useEffect(() => {
+    return () => {
+      if (
+        scrollFrame.current !== null
+      ) {
+        cancelAnimationFrame(
+          scrollFrame.current
+        );
+
+        scrollFrame.current = null;
+      }
+
+      pendingScroll.current = 0;
+    };
+  }, []);
 
   /*
    * ==========================================
@@ -490,8 +579,8 @@ export default function GestureController() {
           className="
             pointer-events-none
             fixed
-            left-5
             bottom-5
+            left-5
             z-[99990]
             rounded-full
             border
