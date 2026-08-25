@@ -55,6 +55,23 @@ export default function HandTracker({
   const lastVideoTimeRef =
     useRef(-1);
 
+  /*
+   * ==========================================
+   * DETECTION THROTTLE
+   * ==========================================
+   *
+   * We keep the render loop on requestAnimationFrame
+   * (for smooth cursor/UI updates elsewhere), but we
+   * don't need to run the actual ML inference every
+   * single frame — that's the main perf/lag cost.
+   * Cap it to roughly 24fps.
+   */
+
+  const lastDetectTimeRef =
+    useRef(0);
+
+  const DETECT_INTERVAL_MS = 42;
+
   const [status, setStatus] =
     useState("Starting...");
 
@@ -196,11 +213,11 @@ export default function HandTracker({
             {
               video: {
                 width: {
-                  ideal: 1280,
+                  ideal: 640,
                 },
 
                 height: {
-                  ideal: 720,
+                  ideal: 480,
                 },
 
                 facingMode: "user",
@@ -357,18 +374,31 @@ export default function HandTracker({
           }
 
           /*
-           * Only process when the camera
-           * has produced a new frame.
+           * Only process when the camera has
+           * produced a new frame AND enough time
+           * has passed since our last detection.
+           * This decouples ML inference cost from
+           * the render loop's frame rate.
            */
+
+          const now = performance.now();
+
+          const dueForDetection =
+            now - lastDetectTimeRef.current >=
+            DETECT_INTERVAL_MS;
 
           if (
             currentVideo.readyState >=
               2 &&
             currentVideo.currentTime !==
-              lastVideoTimeRef.current
+              lastVideoTimeRef.current &&
+            dueForDetection
           ) {
             lastVideoTimeRef.current =
               currentVideo.currentTime;
+
+            lastDetectTimeRef.current =
+              now;
 
             try {
               const result: HandLandmarkerResult =

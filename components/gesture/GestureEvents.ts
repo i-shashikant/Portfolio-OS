@@ -5,6 +5,8 @@ export type GestureEventType =
   | "SELECT"
   | "CURSOR"
   | "OPEN_INTERFACE"
+  | "GO_CONTACT"
+  | "DEV_MODE"
   | "NONE";
 
 export interface GestureEvent {
@@ -75,6 +77,30 @@ export function gestureToEvent(
     case "FIST":
       return {
         type: "NONE",
+        gesture,
+        timestamp,
+      };
+
+    /*
+     * CALL ME
+     * Jumps to the contact section.
+     */
+
+    case "CALL_ME":
+      return {
+        type: "GO_CONTACT",
+        gesture,
+        timestamp,
+      };
+
+    /*
+     * ROCK
+     * Toggles the developer-mode easter egg.
+     */
+
+    case "ROCK":
+      return {
+        type: "DEV_MODE",
         gesture,
         timestamp,
       };

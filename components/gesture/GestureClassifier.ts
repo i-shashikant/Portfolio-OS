@@ -6,6 +6,8 @@ export type Gesture =
   | "POINT"
   | "PEACE"
   | "THUMBS_UP"
+  | "CALL_ME"
+  | "ROCK"
   | "UNKNOWN";
 
 const WRIST = 0;
@@ -55,7 +57,15 @@ function isFingerExtended(
     wrist
   );
 
-  return tipDistance > pipDistance * 1.15;
+  /*
+   * Slightly relaxed ratio (was 1.15) — 1.15 was
+   * borderline strict enough that a finger held at
+   * a natural, not-perfectly-straight angle would
+   * intermittently read as "not extended", causing
+   * gesture flicker.
+   */
+
+  return tipDistance > pipDistance * 1.1;
 }
 
 function isThumbExtended(
@@ -114,10 +124,13 @@ export function classifyGesture(
   /*
    * ✋ OPEN PALM
    *
-   * All five fingers extended.
+   * Four main fingers extended. Thumb is
+   * NOT required — thumb-extension is the
+   * least reliable of the five signals, so
+   * gating a 5-way AND on it made OPEN_PALM
+   * nearly impossible to trigger consistently.
    */
   if (
-    thumb &&
     index &&
     middle &&
     ring &&
@@ -182,6 +195,37 @@ export function classifyGesture(
     !pinky
   ) {
     return "THUMBS_UP";
+  }
+
+  /*
+   * 🤙 CALL ME
+   *
+   * Thumb + pinky extended, index/middle/ring curled.
+   */
+  if (
+    thumb &&
+    !index &&
+    !middle &&
+    !ring &&
+    pinky
+  ) {
+    return "CALL_ME";
+  }
+
+  /*
+   * 🤟 ROCK
+   *
+   * Index + pinky extended, middle/ring curled.
+   * (Thumb can be either way — some people tuck it,
+   * some don't, so we don't gate on it.)
+   */
+  if (
+    index &&
+    !middle &&
+    !ring &&
+    pinky
+  ) {
+    return "ROCK";
   }
 
   return "UNKNOWN";
