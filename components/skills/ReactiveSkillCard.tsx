@@ -5,7 +5,11 @@ import { motion, useSpring, useTransform } from 'framer-motion';
 import { SkillItem } from '@/data/skillData';
 import { soundEngine } from '@/lib/sound/soundEngine';
 import { ArrowUpRight, Sparkles, Terminal, Code2, Database, Cpu, GitBranch, Box } from 'lucide-react';
-
+import {
+  ScanFace,
+  Layers3,
+  Wind,
+} from 'lucide-react';
 interface ReactiveSkillCardProps {
   skill: SkillItem;
   onSelect: (skill: SkillItem) => void;
@@ -102,6 +106,16 @@ export default function ReactiveSkillCard({ skill, onSelect }: ReactiveSkillCard
         return <GitBranch className="h-9 w-9 text-orange-500" />;
       case 'docker':
         return <Box className="h-9 w-9 text-sky-400" />;
+
+      case 'mediapipe':
+  return <ScanFace className="h-9 w-9 text-cyan-400" />;
+
+case 'threejs':
+  return <Layers3 className="h-9 w-9 text-white" />;
+
+case 'tailwind':
+  return <Wind className="h-9 w-9 text-sky-400" />;
+
       default:
         return <Code2 className="h-9 w-9 text-violet-400" />;
     }
@@ -137,7 +151,7 @@ export default function ReactiveSkillCard({ skill, onSelect }: ReactiveSkillCard
         </span>
 
         <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 transition-colors group-hover:border-white/20 group-hover:bg-white/10">
-          <span className="font-mono text-[10px] text-white/50">{skill.proficiency}%</span>
+          <span className="font-mono text-[10px] text-white/50">{skill.strength}%</span>
           <ArrowUpRight className="h-3 w-3 text-white/40 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white" />
         </div>
       </div>
@@ -172,7 +186,7 @@ export default function ReactiveSkillCard({ skill, onSelect }: ReactiveSkillCard
 
               <div>
                 <span className="text-lg font-bold text-white">{skill.name}</span>
-                <span className="block font-mono text-[10px] text-white/40">Exp: {skill.experience}</span>
+                <span className="block font-mono text-[10px] text-white/40">Exp: {skill.strength}</span>
               </div>
             </div>
           </div>
@@ -182,7 +196,7 @@ export default function ReactiveSkillCard({ skill, onSelect }: ReactiveSkillCard
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: isHovered ? `${skill.proficiency}%` : '0%' }}
+                animate={{ width: isHovered ? `${skill.strength}%` : '0%' }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
                 className="h-full rounded-full"
                 style={{ backgroundColor: skill.brandColor }}

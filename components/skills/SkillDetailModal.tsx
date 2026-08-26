@@ -64,7 +64,7 @@ export default function SkillDetailModal({ skill, onClose }: SkillDetailModalPro
                       {skill.categoryLabel}
                     </span>
                     <span className="h-1 w-1 rounded-full bg-white/20" />
-                    <span className="font-mono text-[10px] text-emerald-400">Exp: {skill.experience}</span>
+                    <span className="font-mono text-[10px] text-emerald-400">Exp: {skill.strength}</span>
                   </div>
                 </div>
               </div>
@@ -82,12 +82,12 @@ export default function SkillDetailModal({ skill, onClose }: SkillDetailModalPro
             <div className="mt-6">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="font-mono text-white/50">Proficiency Mastery</span>
-                <span className="font-mono font-bold text-white">{skill.proficiency}%</span>
+                <span className="font-mono font-bold text-white">{skill.strength}%</span>
               </div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: `${skill.proficiency}%` }}
+                  animate={{ width: `${skill.strength}%` }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   className="h-full rounded-full"
                   style={{ backgroundColor: skill.brandColor }}
@@ -102,7 +102,7 @@ export default function SkillDetailModal({ skill, onClose }: SkillDetailModalPro
               <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
                 <div className="flex items-center gap-2 text-xs font-semibold text-white/60 mb-2">
                   <ShieldCheck size={14} className="text-emerald-400" />
-                  <span>Key Strengths & Production Capabilities</span>
+                  <span>What I&apos;ve Used It For</span>
                 </div>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 text-xs text-white/80">
                   {skill.highlights.map((item, idx) => (

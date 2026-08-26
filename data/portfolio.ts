@@ -2,21 +2,24 @@ export const portfolio = {
   name: 'Shashikant',
   shortName: 'Shashi',
 
-  headline: 'AI Engineer & Full Stack Developer',
+  headline: 'AI & Full-Stack Developer',
 
   roles: [
-    'Machine Learning Engineer',
-    'Full Stack Developer',
-    'Open Source Builder',
-    'Problem Solver',
+    'AI & Machine Learning',
+    'Full-Stack Development',
+    'Computer Vision',
+    'Creative Technology',
   ],
 
-  location: 'India',
+  location: 'Ayodhya, India',
 
-  bio: `I build intelligent applications that combine AI, scalable backend
-systems, and delightful user experiences.`,
+  bio: `I build interactive applications that bring together AI,
+machine learning, full-stack development, and creative interfaces.
+I enjoy turning ideas into things people can actually interact with.`,
 
   email: 'shashi873kant@gmail.com',
+
+  phone: '+91 9795083300',
 
   resume: '/resume.pdf',
 };

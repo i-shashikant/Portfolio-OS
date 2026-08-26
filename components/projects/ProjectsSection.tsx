@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePortfolio } from '@/stores/portfolio-store';
 import { projects, Project } from '@/data/projects';
 import ProjectCaseStudyModal from './ProjectCaseStudyModal';
-import LeetCodeWidget from '@/components/widgets/LeetCodeWidget';
+
 import { soundEngine } from '@/lib/sound/soundEngine';
 import { ArrowUpRight, Code2, ExternalLink, GitBranch, Filter, Sparkles } from 'lucide-react';
 
@@ -178,7 +178,7 @@ export default function ProjectsSection() {
 
         {/* Integrated LeetCode Widget at bottom of Projects */}
         <div className="mt-16">
-          <LeetCodeWidget />
+
         </div>
       </div>
 

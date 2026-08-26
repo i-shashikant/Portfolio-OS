@@ -12,17 +12,87 @@ export const aiKnowledge: KnowledgeItem[] = [
     type: 'profile',
     title: 'Shashikant',
     content:
-      'Shashikant is a data science and software developer focused on AI, machine learning, full-stack development, and building practical software systems.',
+      'Shashikant is an early-career AI and full-stack developer based in Ayodhya, India. He is studying Data Science and Applications at IIT Madras and focuses on AI, machine learning, full-stack development, computer vision, and interactive technology. He enjoys turning ideas into interactive software experiences.',
     keywords: [
       'shashikant',
       'developer',
-      'data science',
-      'software',
       'ai',
+      'artificial intelligence',
       'machine learning',
+      'data science',
+      'full stack',
+      'computer vision',
+      'ayodhya',
     ],
   },
 
+
+
+  {
+  id: 'experience-chibity',
+  type: 'experience',
+  title: 'Subtitle Editor & Script Writer — Chibity Entertainment Ltd.',
+  content:
+    'Shashikant has been working as a Subtitle Editor and Script Writer at Chibity Entertainment Ltd. in Chhattisgarh since February 2025. His work includes subtitle creation, time-coding, proofreading, quality control, script writing, localization, and adapting scripts for voice-over, dubbing, and subtitling projects. He has worked with tools including Aegisub and Subtitle Edit.',
+  keywords: [
+    'chibity',
+    'subtitle',
+    'script writer',
+    'content localization',
+    'aegisub',
+    'subtitle edit',
+    'time coding',
+  ],
+},
+
+{
+  id: 'experience-mathematics-computing',
+  type: 'experience',
+  title: 'Mathematics & Computing — Self-employed',
+  content:
+    'Since July 2024, Shashikant has worked independently in mathematics and computing education in Ayodhya. His work includes developing lesson plans, creating structured teaching and debugging approaches, preparing journal content, and reviewing technical material for accuracy.',
+  keywords: [
+    'mathematics',
+    'computing',
+    'teaching',
+    'debugging',
+    'self employed',
+    'ayodhya',
+  ],
+},
+
+{
+  id: 'experience-school-core-ai',
+  type: 'experience',
+  title: 'Blog & Content Writer — School of Core AI',
+  content:
+    'Shashikant worked as a Blog and Content Writer Intern at School of Core AI from December 2024 to February 2025. He created SEO-optimized technical and non-technical content covering data analysis, machine learning, artificial intelligence, and data visualization.',
+  keywords: [
+    'school of core ai',
+    'content writer',
+    'data science',
+    'machine learning',
+    'artificial intelligence',
+    'data visualization',
+    'seo',
+  ],
+},
+
+{
+  id: 'education',
+  type: 'profile',
+  title: 'Education',
+  content:
+    'Shashikant is pursuing a Bachelor of Science in Data Science and Applications at the Indian Institute of Technology Madras from 2024 to 2028. He also has a Bachelor of Science program at Ram Manohar Lohia spanning 2023 to 2026.',
+  keywords: [
+    'education',
+    'iit madras',
+    'indian institute of technology madras',
+    'data science and applications',
+    'bsc',
+    'ram manohar lohia',
+  ],
+},
   {
     id: 'campuschaupal',
     type: 'project',
