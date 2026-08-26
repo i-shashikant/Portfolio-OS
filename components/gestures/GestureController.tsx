@@ -20,7 +20,6 @@ export default function GestureController() {
     previousProject,
     goHome,
     toggleDevMode,
-    toggleGitHubWidget,
     triggerGestureToast,
   } = usePortfolio();
 
@@ -84,14 +83,6 @@ export default function GestureController() {
         return;
       }
 
-      // 2. Victory Sign (✌️) -> Open GitHub Analytics Widget
-      if (gesture === 'VICTORY') {
-        if (canTrigger('VICTORY', 2000)) {
-          triggerGestureToast('✌️ GitHub Analytics Opened');
-          toggleGitHubWidget();
-        }
-        return;
-      }
 
       // 3. Closed Fist (✊) -> Go Home / Close Overlay
       if (gesture === 'CLOSED_FIST') {

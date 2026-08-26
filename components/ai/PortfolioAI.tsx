@@ -19,7 +19,7 @@ export default function PortfolioAI() {
   } = usePortfolio();
 
   const [open, setOpen] = useState(false);
-
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',

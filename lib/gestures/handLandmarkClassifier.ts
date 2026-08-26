@@ -11,7 +11,6 @@ export type HandGestureType =
   | 'SWIPE_UP'
   | 'SWIPE_RIGHT'
   | 'SWIPE_LEFT'
-  | 'VICTORY'
   | 'CLOSED_FIST'
   | 'CALL_ME'
   | 'ROCK_SIGN'
@@ -90,12 +89,6 @@ export function classifyStaticGesture(
   // All fingers folded close to palm
   if (!thumb && !index && !middle && !ring && !pinky) {
     return 'CLOSED_FIST';
-  }
-
-  // 3. Victory Sign (✌️) - Open GitHub
-  // Index and Middle extended, Ring and Pinky folded
-  if (index && middle && !ring && !pinky) {
-    return 'VICTORY';
   }
 
   // 4. Call-Me Sign (🤙) - Go to Contact

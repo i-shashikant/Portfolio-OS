@@ -33,6 +33,8 @@ type PortfolioState = {
   theme: OSTheme;
   projectFilterTag: string;
   gitHubWidgetOpen: boolean;
+  aiOpen: boolean;
+  setAiOpen: (open: boolean) => void;
 
   enterOS: () => void;
   goHome: () => void;
@@ -49,7 +51,7 @@ type PortfolioState = {
   triggerGestureToast: (message: string) => void;
   setTheme: (theme: OSTheme) => void;
   setProjectFilterTag: (tag: string) => void;
-  toggleGitHubWidget: () => void;
+
 };
 
 const PortfolioContext = createContext<PortfolioState | null>(null);
@@ -58,6 +60,7 @@ export function PortfolioProvider({
   children,
 }: {
   children: ReactNode;
+  
 }) {
   const [section, setSection] =
     useState<PortfolioSection>('home');
@@ -72,6 +75,7 @@ export function PortfolioProvider({
   const [devModeOpen, setDevModeOpen] = useState(false);
   const [gestureGuideOpen, setGestureGuideOpenState] = useState(false);
   const [gestureToast, setGestureToast] = useState<string | null>(null);
+  
 
   const toggleGestures = useCallback(() => {
     setGesturesEnabled((current) => !current);
@@ -173,6 +177,7 @@ export function PortfolioProvider({
   const [theme, setThemeState] = useState<OSTheme>('dark');
   const [projectFilterTag, setProjectFilterTagState] = useState<string>('All');
   const [gitHubWidgetOpen, setGitHubWidgetOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
 
   const setTheme = useCallback((newTheme: OSTheme) => {
     setThemeState(newTheme);
@@ -220,6 +225,8 @@ export function PortfolioProvider({
       setTheme,
       setProjectFilterTag,
       toggleGitHubWidget,
+      aiOpen,
+      setAiOpen,
     }),
     [
       section,
@@ -247,6 +254,8 @@ export function PortfolioProvider({
       setTheme,
       setProjectFilterTag,
       toggleGitHubWidget,
+      aiOpen,
+      setAiOpen,
     ],
   );
 

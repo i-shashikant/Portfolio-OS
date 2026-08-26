@@ -41,12 +41,7 @@ export const gestureList = [
     type: 'Discrete',
     icon: <ArrowLeft className="text-amber-400" size={18} />,
   },
-  {
-    action: 'Open GitHub',
-    gesture: 'Victory sign (✌️)',
-    type: 'Discrete',
-    icon: <Code2 className="text-purple-400" size={18} />,
-  },
+  
   {
     action: 'Go home / close overlay',
     gesture: 'Closed fist (✊)',

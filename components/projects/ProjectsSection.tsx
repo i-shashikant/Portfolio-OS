@@ -12,7 +12,7 @@ import { ArrowUpRight, Code2, ExternalLink, GitBranch, Filter, Sparkles } from '
 const FILTER_TAGS = ['All', 'Python', 'Flask', 'React', 'Next.js', 'Machine Learning', 'Vue'];
 
 export default function ProjectsSection() {
-  const { osEntered, projectFilterTag, setProjectFilterTag, toggleGitHubWidget } = usePortfolio();
+  const { osEntered, projectFilterTag, setProjectFilterTag } = usePortfolio();
   const [selectedModalProject, setSelectedModalProject] = useState<Project | null>(null);
 
   const filteredProjects = useMemo(() => {
@@ -49,14 +49,7 @@ export default function ProjectsSection() {
             <span className="text-xs uppercase tracking-[0.25em] text-white/40">Selected Works & Systems</span>
           </div>
 
-          <button
-            type="button"
-            onClick={toggleGitHubWidget}
-            className="flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3.5 py-1.5 font-mono text-xs text-purple-200 transition-colors hover:bg-purple-500/20"
-          >
-            <GitBranch size={14} />
-            <span>GitHub Live Analytics</span>
-          </button>
+          
         </motion.div>
 
         {/* Intro */}

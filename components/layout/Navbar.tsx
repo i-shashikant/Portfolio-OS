@@ -29,7 +29,7 @@ export default function Navbar() {
   gesturesEnabled,
   toggleGestures,
 } = usePortfolio();
-
+  
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
@@ -80,6 +80,8 @@ export default function Navbar() {
             </a>
 
             <button
+            type="button"
+            // onClick={() => setAiOpen(true)}
               className="hidden items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-3 py-2 text-sm text-violet-200 transition hover:bg-violet-500/20 sm:flex"
             >
               <Sparkles size={16} />
