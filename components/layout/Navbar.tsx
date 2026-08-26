@@ -11,7 +11,6 @@ import { socials } from '@/data/socials';
 const navItems = [
   { label: 'Work', href: '#projects' },
   { label: 'About', href: '#about' },
-  { label: 'Lab', href: '#lab' },
   { label: 'Contact', href: '#contact' },
 ];
 

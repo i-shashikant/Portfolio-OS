@@ -78,11 +78,6 @@ export function usePortfolioKeyboard() {
           openSection('skills');
           break;
 
-        case 'l':
-        case 'L':
-          event.preventDefault();
-          openSection('lab');
-          break;
 
         case 'c':
         case 'C':

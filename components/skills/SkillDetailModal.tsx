@@ -82,12 +82,12 @@ export default function SkillDetailModal({ skill, onClose }: SkillDetailModalPro
             <div className="mt-6">
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="font-mono text-white/50">Proficiency Mastery</span>
-                <span className="font-mono font-bold text-white">{skill.strength}%</span>
+                <span className="font-mono font-bold text-white">{skill.strength}</span>
               </div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: `${skill.strength}%` }}
+                  animate={{ width: `${skill.strength}` }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   className="h-full rounded-full"
                   style={{ backgroundColor: skill.brandColor }}

@@ -173,26 +173,6 @@ export default function PortfolioAI() {
       return;
     }
 
-    /*
-     * -------------------------------------------------------
-     * LAB
-     * -------------------------------------------------------
-     */
-
-    if (
-      text === 'lab' ||
-      text === 'show lab' ||
-      text === 'show me the lab' ||
-      text === 'open lab' ||
-      text === 'go to lab' ||
-      text === 'view lab' ||
-      text === 'experiments' ||
-      text === 'show experiments' ||
-      text === 'open experiments'
-    ) {
-      openSection('lab');
-      return;
-    }
 
     /*
      * -------------------------------------------------------

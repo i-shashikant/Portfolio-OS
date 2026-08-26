@@ -16,7 +16,6 @@ export type PortfolioSection =
   | 'projects'
   | 'about'
   | 'skills'
-  | 'lab'
   | 'contact';
 
 export type OSTheme = 'dark' | 'cyberpunk' | 'obsidian' | 'matrix';

@@ -151,7 +151,7 @@ case 'tailwind':
         </span>
 
         <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 transition-colors group-hover:border-white/20 group-hover:bg-white/10">
-          <span className="font-mono text-[10px] text-white/50">{skill.strength}%</span>
+          <span className="font-mono text-[10px] text-white/50">{skill.strength}</span>
           <ArrowUpRight className="h-3 w-3 text-white/40 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white" />
         </div>
       </div>
@@ -196,7 +196,7 @@ case 'tailwind':
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: isHovered ? `${skill.strength}%` : '0%' }}
+                animate={{ width: isHovered ? `${skill.strength}` : '0%' }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
                 className="h-full rounded-full"
                 style={{ backgroundColor: skill.brandColor }}

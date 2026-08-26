@@ -33,7 +33,6 @@ export default function OSCommandPalette() {
     { id: 'projects', label: 'Open Projects Showcase', category: 'Navigation', icon: <Briefcase size={16} />, action: () => openSection('projects') },
     { id: 'skills', label: 'Open Reactive Skills Matrix', category: 'Navigation', icon: <Code2 size={16} />, action: () => openSection('skills') },
     { id: 'about', label: 'View About Me', category: 'Navigation', icon: <User size={16} />, action: () => openSection('about') },
-    { id: 'lab', label: 'View Lab Experiments', category: 'Navigation', icon: <FlaskConical size={16} />, action: () => openSection('lab') },
     { id: 'contact', label: 'Jump to Contact', category: 'Navigation', icon: <Mail size={16} />, action: () => openSection('contact') },
     { id: 'github-widget', label: 'Open GitHub Analytics (✌️)', category: 'Analytics', icon: <Command size={16} />, action: () => toggleGitHubWidget() },
     { id: 'gestures', label: 'Toggle Hand Gesture Controls', category: 'OS System', icon: <Hand size={16} />, action: () => toggleGestures() },

@@ -45,10 +45,6 @@ export default function KeyboardController() {
           openSection('skills');
           break;
 
-        case 'l':
-          event.preventDefault();
-          openSection('lab');
-          break;
 
         case 'c':
           event.preventDefault();

@@ -127,13 +127,11 @@ export default function GestureController() {
           if (section === 'home') openSection('projects');
           else if (section === 'projects') openSection('about');
           else if (section === 'about') openSection('skills');
-          else if (section === 'skills') openSection('lab');
-          else if (section === 'lab') openSection('contact');
+          else if (section === 'skills') openSection('contact');
           else window.scrollBy({ top: 400, behavior: 'smooth' });
         } else if (rawVelocity.vy < -0.8 && canTrigger('SWIPE_UP', 1000)) {
           triggerGestureToast('🖐 Swipe Up: Previous Section');
-          if (section === 'contact') openSection('lab');
-          else if (section === 'lab') openSection('skills');
+          if (section === 'contact') openSection('skills');
           else if (section === 'skills') openSection('about');
           else if (section === 'about') openSection('projects');
           else if (section === 'projects') openSection('home');

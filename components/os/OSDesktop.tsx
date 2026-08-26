@@ -25,7 +25,6 @@ type OSApp = {
     | "projects"
     | "about"
     | "skills"
-    | "lab"
     | "contact";
 
   label: string;
@@ -64,12 +63,6 @@ const apps: OSApp[] = [
     icon: <Code2 size={22} />,
   },
 
-  {
-    id: "lab",
-    label: "Lab",
-    description: "Experiments",
-    icon: <FlaskConical size={22} />,
-  },
 
   {
     id: "contact",
