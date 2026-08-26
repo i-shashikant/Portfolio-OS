@@ -27,6 +27,7 @@ export default function GestureController() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const landmarkerRef = useRef<any>(null);
   const animFrameRef = useRef<number | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const swipeDetectorRef = useRef<SwipeDetector>(new SwipeDetector());
 
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -39,7 +40,7 @@ export default function GestureController() {
   const [cursorVisible, setCursorVisible] = useState(false);
   const cursorElemRef = useRef<HTMLDivElement | null>(null);
 
-  // Cooldown timers for discrete gestures to avoid hyper-triggering
+  // Cooldown timers for discrete gestures
   const cooldownRef = useRef<{ [key: string]: number }>({});
   const canTrigger = (gesture: string, cooldownMs = 1200) => {
     const now = performance.now();
@@ -50,6 +51,21 @@ export default function GestureController() {
     return false;
   };
 
+  // Helper to reliably stop camera stream tracks
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+        track.enabled = false;
+      });
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setIsCameraActive(false);
+  }, []);
+
   // Dispatch Action for discrete gesture
   const handleGestureAction = useCallback(
     (gesture: HandGestureType, rawVelocity: { vx: number; vy: number }) => {
@@ -57,14 +73,11 @@ export default function GestureController() {
       if (gesture === 'THUMBS_UP') {
         if (canTrigger('THUMBS_UP', 1000)) {
           triggerGestureToast('👍 Select / Confirm Clicked');
-
           const cx = cursorCurrRef.current.x;
           const cy = cursorCurrRef.current.y;
           if (cx > 0 && cy > 0) {
             const targetEl = document.elementFromPoint(cx, cy) as HTMLElement | null;
-            if (targetEl) {
-              targetEl.click();
-            }
+            if (targetEl) targetEl.click();
           }
         }
         return;
@@ -109,7 +122,7 @@ export default function GestureController() {
       // 6. Open Palm Swipes (Scroll Down / Scroll Up)
       if (gesture === 'OPEN_PALM') {
         if (rawVelocity.vy > 0.8 && canTrigger('SWIPE_DOWN', 1000)) {
-          triggerGestureToast('🖐 Swipe Down: Next Section / Scroll');
+          triggerGestureToast('🖐 Swipe Down: Next Section');
           if (section === 'home') openSection('projects');
           else if (section === 'projects') openSection('about');
           else if (section === 'about') openSection('skills');
@@ -117,7 +130,7 @@ export default function GestureController() {
           else if (section === 'lab') openSection('contact');
           else window.scrollBy({ top: 400, behavior: 'smooth' });
         } else if (rawVelocity.vy < -0.8 && canTrigger('SWIPE_UP', 1000)) {
-          triggerGestureToast('🖐 Swipe Up: Previous Section / Scroll');
+          triggerGestureToast('🖐 Swipe Up: Previous Section');
           if (section === 'contact') openSection('lab');
           else if (section === 'lab') openSection('skills');
           else if (section === 'skills') openSection('about');
@@ -142,11 +155,14 @@ export default function GestureController() {
     [section, openSection, nextProject, previousProject, goHome, toggleDevMode, triggerGestureToast]
   );
 
-  // Initialize MediaPipe HandLandmarker
+  // Initialize MediaPipe HandLandmarker & Webcam Stream Lifecycle
   useEffect(() => {
-    if (!gesturesEnabled) return;
-
     let isMounted = true;
+
+    if (!gesturesEnabled) {
+      stopCamera();
+      return;
+    }
 
     async function initMediaPipe() {
       try {
@@ -172,7 +188,14 @@ export default function GestureController() {
             video: { width: 640, height: 480, frameRate: { ideal: 30 } },
           });
 
-          if (videoRef.current && isMounted) {
+          if (!isMounted) {
+            stream.getTracks().forEach((t) => t.stop());
+            return;
+          }
+
+          streamRef.current = stream;
+
+          if (videoRef.current) {
             videoRef.current.srcObject = stream;
             videoRef.current.onloadedmetadata = () => {
               videoRef.current?.play();
@@ -189,15 +212,12 @@ export default function GestureController() {
 
     return () => {
       isMounted = false;
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach((t) => t.stop());
-      }
+      stopCamera();
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
       }
     };
-  }, [gesturesEnabled]);
+  }, [gesturesEnabled, stopCamera]);
 
   // Main Animation Loop
   useEffect(() => {
@@ -214,7 +234,6 @@ export default function GestureController() {
       if (video && video.readyState >= 2 && landmarker) {
         const results = landmarker.detectForVideo(video, performance.now());
 
-        // FPS calculation
         frameCount++;
         const now = performance.now();
         if (now - lastTime >= 1000) {
@@ -223,7 +242,6 @@ export default function GestureController() {
           lastTime = now;
         }
 
-        // Draw on canvas HUD
         if (canvas) {
           const ctx = canvas.getContext('2d');
           if (ctx) {
@@ -235,7 +253,6 @@ export default function GestureController() {
             if (results.landmarks && results.landmarks.length > 0) {
               const landmarks: NormalizedLandmark[] = results.landmarks[0];
 
-              // Render Landmarks Connections
               ctx.strokeStyle = '#8b5cf6';
               ctx.lineWidth = 2;
               const connections = [
@@ -252,7 +269,6 @@ export default function GestureController() {
                 ctx.stroke();
               });
 
-              // Render Points
               ctx.fillStyle = '#34d399';
               landmarks.forEach((pt) => {
                 ctx.beginPath();
@@ -260,24 +276,18 @@ export default function GestureController() {
                 ctx.fill();
               });
 
-              // Process Gesture Recognition
               const fingerStates = getFingerStates(landmarks);
               const gesture = classifyStaticGesture(landmarks, fingerStates);
               setActiveGesture(gesture);
 
-              // Track Index Tip for Cursor (Landmark 8)
               const indexTip = landmarks[8];
-              // Mirror X since video is flipped horizontally
               const targetX = (1 - indexTip.x) * window.innerWidth;
               const targetY = indexTip.y * window.innerHeight;
 
               cursorTargetRef.current = { x: targetX, y: targetY };
               setCursorVisible(gesture === 'CURSOR_POINT' || fingerStates.index);
 
-              // Update Velocity Vector
               const vel = swipeDetectorRef.current.update({ x: indexTip.x, y: indexTip.y });
-
-              // Handle Actions
               handleGestureAction(gesture, vel);
             } else {
               setActiveGesture('NONE');
@@ -288,7 +298,6 @@ export default function GestureController() {
         }
       }
 
-      // Smooth Virtual Cursor Movement (Lerp)
       if (cursorVisible) {
         cursorCurrRef.current.x += (cursorTargetRef.current.x - cursorCurrRef.current.x) * 0.25;
         cursorCurrRef.current.y += (cursorTargetRef.current.y - cursorCurrRef.current.y) * 0.25;
@@ -304,49 +313,43 @@ export default function GestureController() {
     animFrameRef.current = requestAnimationFrame(processFrame);
 
     return () => {
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-      }
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
   }, [gesturesEnabled, isCameraActive, cursorVisible, handleGestureAction]);
 
   const handleToggleCamera = () => {
     if (isCameraActive) {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach((t) => t.stop());
-      }
-      setIsCameraActive(false);
+      stopCamera();
     } else {
       setIsCameraActive(true);
     }
   };
 
-  if (!gesturesEnabled) return null;
-
   return (
     <>
-      {/* Hidden Video Source */}
+      {/* Always mounted video source so videoRef persists during cleanup */}
       <video ref={videoRef} className="hidden" playsInline muted />
 
-      {/* Floating HUD Preview */}
-      <GestureHUD
-        canvasRef={canvasRef}
-        activeGesture={activeGesture}
-        isCameraActive={isCameraActive}
-        fps={fps}
-        onToggleCamera={handleToggleCamera}
-      />
+      {gesturesEnabled && (
+        <>
+          <GestureHUD
+            canvasRef={canvasRef}
+            activeGesture={activeGesture}
+            isCameraActive={isCameraActive}
+            fps={fps}
+            onToggleCamera={handleToggleCamera}
+          />
 
-      {/* Virtual Laser Cursor Dot & Pulsing Ring */}
-      {cursorVisible && (
-        <div
-          ref={cursorElemRef}
-          className="pointer-events-none fixed left-0 top-0 z-[10002] -ml-4 -mt-4 flex h-8 w-8 items-center justify-center transition-opacity duration-200"
-        >
-          <span className="absolute h-8 w-8 rounded-full border border-violet-400/60 bg-violet-500/20 animate-ping opacity-75" />
-          <span className="h-3 w-3 rounded-full bg-violet-400 shadow-[0_0_12px_rgba(167,139,250,1)]" />
-        </div>
+          {cursorVisible && (
+            <div
+              ref={cursorElemRef}
+              className="pointer-events-none fixed left-0 top-0 z-[10002] -ml-4 -mt-4 flex h-8 w-8 items-center justify-center transition-opacity duration-200"
+            >
+              <span className="absolute h-8 w-8 rounded-full border border-violet-400/60 bg-violet-500/20 animate-ping opacity-75" />
+              <span className="h-3 w-3 rounded-full bg-violet-400 shadow-[0_0_12px_rgba(167,139,250,1)]" />
+            </div>
+          )}
+        </>
       )}
     </>
   );
