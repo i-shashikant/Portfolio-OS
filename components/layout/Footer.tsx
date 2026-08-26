@@ -31,7 +31,6 @@ export default function Footer() {
             ['Work', 'projects'],
             ['About', 'about'],
             ['Skills', 'skills'],
-            ['Lab', 'lab'],
             ['Contact', 'contact'],
           ].map(([label, section]) => (
             <button
@@ -43,7 +42,6 @@ export default function Footer() {
                     | 'projects'
                     | 'about'
                     | 'skills'
-                    | 'lab'
                     | 'contact',
                 )
               }

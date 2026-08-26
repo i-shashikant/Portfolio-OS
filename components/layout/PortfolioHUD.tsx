@@ -6,7 +6,6 @@ import { usePortfolio } from '@/stores/portfolio-store';
 const shortcuts = [
   { key: 'P', label: 'Projects' },
   { key: 'S', label: 'Skills' },
-  { key: 'L', label: 'Lab' },
   { key: 'C', label: 'Contact' },
 ];
 
