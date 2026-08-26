@@ -10,6 +10,7 @@ import {
   User,
   Sparkles,
   Hand,
+  HelpCircle,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -85,6 +86,7 @@ export default function OSDesktop() {
     gesturesEnabled,
     activeProjectIndex,
     toggleGestures,
+    toggleGestureGuide,
     openSection,
     nextProject,
     previousProject,
@@ -254,55 +256,66 @@ export default function OSDesktop() {
           </span>
         </div>
 
-        {/* Gesture toggle */}
+        {/* Gesture controls */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleGestureGuide}
+            title="Gesture Controls Matrix Guide"
+            className="flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.025] px-3 py-2 text-xs text-white/60 transition-all hover:bg-white/[0.07] hover:text-white"
+          >
+            <HelpCircle size={14} />
+            <span className="hidden md:inline">Gesture Matrix</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={toggleGestures}
-          className={`
-            flex
-            items-center
-            gap-2
-            rounded-full
-            border
-            px-3
-            py-2
-            text-xs
-            transition-all
-            ${
-              gesturesEnabled
-                ? `
-                  border-violet-400/30
-                  bg-violet-500/10
-                  text-violet-200
-                `
-                : `
-                  border-white/[0.08]
-                  bg-white/[0.025]
-                  text-white/40
-                `
-            }
-          `}
-        >
-          <Hand size={14} />
-
-          <span className="hidden sm:inline">
-            Gestures
-          </span>
-
-          <span
+          <button
+            type="button"
+            onClick={toggleGestures}
             className={`
-              h-1.5
-              w-1.5
+              flex
+              items-center
+              gap-2
               rounded-full
+              border
+              px-3
+              py-2
+              text-xs
+              transition-all
               ${
                 gesturesEnabled
-                  ? "bg-emerald-400"
-                  : "bg-white/20"
+                  ? `
+                    border-violet-400/30
+                    bg-violet-500/10
+                    text-violet-200
+                  `
+                  : `
+                    border-white/[0.08]
+                    bg-white/[0.025]
+                    text-white/40
+                  `
               }
             `}
-          />
-        </button>
+          >
+            <Hand size={14} />
+
+            <span className="hidden sm:inline">
+              Gestures
+            </span>
+
+            <span
+              className={`
+                h-1.5
+                w-1.5
+                rounded-full
+                ${
+                  gesturesEnabled
+                    ? "bg-emerald-400"
+                    : "bg-white/20"
+                }
+              `}
+            />
+          </button>
+        </div>
       </header>
 
       {/* =====================================

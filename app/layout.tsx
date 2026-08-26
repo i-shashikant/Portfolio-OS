@@ -8,8 +8,9 @@ import { PortfolioProvider } from '@/stores/portfolio-store';
 
 import OSBootScreen from '@/components/os/OSBootScreen';
 import KeyboardController from '@/components/os/KeyboardController';
-
-// import GestureController from '@/components/gesture/GestureController';
+import GestureController from '@/components/gestures/GestureController';
+import GestureGuideModal from '@/components/gestures/GestureGuideModal';
+import DeveloperModeEasterEgg from '@/components/gestures/DeveloperModeEasterEgg';
 
 import './globals.css';
 
@@ -36,8 +37,10 @@ export default function RootLayout({
           <Navbar />
           <KeyboardController />
 
-          {/* Global gesture layer */}
-          {/* <GestureController /> */}
+          {/* Hand Gesture Controls System */}
+          <GestureController />
+          <GestureGuideModal />
+          <DeveloperModeEasterEgg />
 
           {/* ORIGINAL PORTFOLIO */}
           {children}

@@ -25,6 +25,9 @@ type PortfolioState = {
   osEntered: boolean;
 
   gesturesEnabled: boolean;
+  devModeOpen: boolean;
+  gestureGuideOpen: boolean;
+  gestureToast: string | null;
 
   enterOS: () => void;
   goHome: () => void;
@@ -35,6 +38,10 @@ type PortfolioState = {
   openProject: (slug: string) => void;
   setActiveProject: (index: number) => void;
   toggleGestures: () => void;
+  toggleDevMode: () => void;
+  toggleGestureGuide: () => void;
+  setGestureGuideOpen: (open: boolean) => void;
+  triggerGestureToast: (message: string) => void;
 };
 
 const PortfolioContext = createContext<PortfolioState | null>(null);
@@ -54,8 +61,31 @@ export function PortfolioProvider({
   const [osEntered, setOsEntered] = useState(false);
 
   const [gesturesEnabled, setGesturesEnabled] = useState(false);
+  const [devModeOpen, setDevModeOpen] = useState(false);
+  const [gestureGuideOpen, setGestureGuideOpenState] = useState(false);
+  const [gestureToast, setGestureToast] = useState<string | null>(null);
+
   const toggleGestures = useCallback(() => {
     setGesturesEnabled((current) => !current);
+  }, []);
+
+  const toggleDevMode = useCallback(() => {
+    setDevModeOpen((current) => !current);
+  }, []);
+
+  const toggleGestureGuide = useCallback(() => {
+    setGestureGuideOpenState((current) => !current);
+  }, []);
+
+  const setGestureGuideOpen = useCallback((open: boolean) => {
+    setGestureGuideOpenState(open);
+  }, []);
+
+  const triggerGestureToast = useCallback((message: string) => {
+    setGestureToast(message);
+    setTimeout(() => {
+      setGestureToast((current) => (current === message ? null : current));
+    }, 2500);
   }, []);
 
   const setActiveProject = useCallback((index: number) => {
@@ -139,6 +169,9 @@ export function PortfolioProvider({
       osEntered,
 
       gesturesEnabled,
+      devModeOpen,
+      gestureGuideOpen,
+      gestureToast,
 
       enterOS,
       goHome,
@@ -149,12 +182,19 @@ export function PortfolioProvider({
       openProject,
       setActiveProject,
       toggleGestures,
+      toggleDevMode,
+      toggleGestureGuide,
+      setGestureGuideOpen,
+      triggerGestureToast,
     }),
     [
       section,
       activeProjectIndex,
       osEntered,
       gesturesEnabled,
+      devModeOpen,
+      gestureGuideOpen,
+      gestureToast,
       enterOS,
       goHome,
       openSection,
@@ -163,6 +203,10 @@ export function PortfolioProvider({
       openProject,
       setActiveProject,
       toggleGestures,
+      toggleDevMode,
+      toggleGestureGuide,
+      setGestureGuideOpen,
+      triggerGestureToast,
     ],
   );
 
