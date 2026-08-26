@@ -11,6 +11,7 @@ import KeyboardController from '@/components/os/KeyboardController';
 import GestureController from '@/components/gestures/GestureController';
 import GestureGuideModal from '@/components/gestures/GestureGuideModal';
 import DeveloperModeEasterEgg from '@/components/gestures/DeveloperModeEasterEgg';
+import OSCommandPalette from '@/components/os/OSCommandPalette';
 
 import './globals.css';
 
@@ -37,10 +38,11 @@ export default function RootLayout({
           <Navbar />
           <KeyboardController />
 
-          {/* Hand Gesture Controls System */}
+          {/* Hand Gesture Controls System & OS Palette */}
           <GestureController />
           <GestureGuideModal />
           <DeveloperModeEasterEgg />
+          <OSCommandPalette />
 
           {/* ORIGINAL PORTFOLIO */}
           {children}
