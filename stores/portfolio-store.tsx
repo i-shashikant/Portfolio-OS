@@ -19,6 +19,8 @@ export type PortfolioSection =
   | 'lab'
   | 'contact';
 
+export type OSTheme = 'dark' | 'cyberpunk' | 'obsidian' | 'matrix';
+
 type PortfolioState = {
   section: PortfolioSection;
   activeProjectIndex: number;
@@ -28,6 +30,10 @@ type PortfolioState = {
   devModeOpen: boolean;
   gestureGuideOpen: boolean;
   gestureToast: string | null;
+
+  theme: OSTheme;
+  projectFilterTag: string;
+  gitHubWidgetOpen: boolean;
 
   enterOS: () => void;
   goHome: () => void;
@@ -42,6 +48,9 @@ type PortfolioState = {
   toggleGestureGuide: () => void;
   setGestureGuideOpen: (open: boolean) => void;
   triggerGestureToast: (message: string) => void;
+  setTheme: (theme: OSTheme) => void;
+  setProjectFilterTag: (tag: string) => void;
+  toggleGitHubWidget: () => void;
 };
 
 const PortfolioContext = createContext<PortfolioState | null>(null);
@@ -162,6 +171,25 @@ export function PortfolioProvider({
     [openSection],
   );
 
+  const [theme, setThemeState] = useState<OSTheme>('dark');
+  const [projectFilterTag, setProjectFilterTagState] = useState<string>('All');
+  const [gitHubWidgetOpen, setGitHubWidgetOpen] = useState(false);
+
+  const setTheme = useCallback((newTheme: OSTheme) => {
+    setThemeState(newTheme);
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', newTheme);
+    }
+  }, []);
+
+  const setProjectFilterTag = useCallback((tag: string) => {
+    setProjectFilterTagState(tag);
+  }, []);
+
+  const toggleGitHubWidget = useCallback(() => {
+    setGitHubWidgetOpen((current) => !current);
+  }, []);
+
   const value = useMemo(
     () => ({
       section,
@@ -173,6 +201,10 @@ export function PortfolioProvider({
       gestureGuideOpen,
       gestureToast,
 
+      theme,
+      projectFilterTag,
+      gitHubWidgetOpen,
+
       enterOS,
       goHome,
       openSection,
@@ -186,6 +218,9 @@ export function PortfolioProvider({
       toggleGestureGuide,
       setGestureGuideOpen,
       triggerGestureToast,
+      setTheme,
+      setProjectFilterTag,
+      toggleGitHubWidget,
     }),
     [
       section,
@@ -195,6 +230,9 @@ export function PortfolioProvider({
       devModeOpen,
       gestureGuideOpen,
       gestureToast,
+      theme,
+      projectFilterTag,
+      gitHubWidgetOpen,
       enterOS,
       goHome,
       openSection,
@@ -207,6 +245,9 @@ export function PortfolioProvider({
       toggleGestureGuide,
       setGestureGuideOpen,
       triggerGestureToast,
+      setTheme,
+      setProjectFilterTag,
+      toggleGitHubWidget,
     ],
   );
 

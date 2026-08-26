@@ -12,6 +12,7 @@ import GestureController from '@/components/gestures/GestureController';
 import GestureGuideModal from '@/components/gestures/GestureGuideModal';
 import DeveloperModeEasterEgg from '@/components/gestures/DeveloperModeEasterEgg';
 import OSCommandPalette from '@/components/os/OSCommandPalette';
+import VoiceController from '@/components/voice/VoiceController';
 
 import './globals.css';
 
@@ -43,6 +44,10 @@ export default function RootLayout({
           <GestureGuideModal />
           <DeveloperModeEasterEgg />
           <OSCommandPalette />
+
+          {/* Voice Navigation & Live Widgets */}
+          <VoiceController />
+
 
           {/* ORIGINAL PORTFOLIO */}
           {children}

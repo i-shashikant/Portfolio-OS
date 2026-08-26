@@ -20,6 +20,7 @@ export default function GestureController() {
     previousProject,
     goHome,
     toggleDevMode,
+    toggleGitHubWidget,
     triggerGestureToast,
   } = usePortfolio();
 
@@ -83,11 +84,11 @@ export default function GestureController() {
         return;
       }
 
-      // 2. Victory Sign (✌️) -> Open GitHub
+      // 2. Victory Sign (✌️) -> Open GitHub Analytics Widget
       if (gesture === 'VICTORY') {
         if (canTrigger('VICTORY', 2000)) {
-          triggerGestureToast('✌️ Opening GitHub...');
-          window.open('https://github.com', '_blank');
+          triggerGestureToast('✌️ GitHub Analytics Opened');
+          toggleGitHubWidget();
         }
         return;
       }
