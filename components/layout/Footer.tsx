@@ -25,6 +25,10 @@ export default function Footer() {
           Shashikant<span className="text-white/20">.</span>
         </button>
 
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/15">
+          shashi873kant@gmail.com
+        </span>
+
         {/* Navigation */}
         <nav className="flex flex-wrap gap-5">
           {[
