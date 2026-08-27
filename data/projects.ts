@@ -122,4 +122,44 @@ export const projects: Project[] = [
       ],
     },
   },
+
+  {
+    slug: 'portfolio-os',
+    title: 'Portfolio OS',
+    description:
+      'An interactive AI-powered portfolio operating system combining gesture control, voice interaction, Gemini AI, dynamic themes, and a responsive project experience.',
+    category: 'AI / Full Stack',
+    technologies: [
+      'TypeScript',
+      'JavaScript',
+      'React',
+      'Next.js',
+      'Tailwind CSS',
+      'Framer Motion',
+      'Gemini API',
+      'MediaPipe',
+    ],
+    featured: true,
+    github: 'https://github.com/i-shashikant/portfolio-os',
+    caseStudy: {
+      overview:
+        'Portfolio OS is an interactive personal portfolio designed as a software system rather than a traditional static portfolio website.',
+      problem:
+        'Traditional portfolios mainly present information through static pages. I wanted the portfolio itself to demonstrate the kind of interactive software, AI systems, and interfaces I build.',
+      solution:
+        'Built an interactive portfolio operating system with AI assistance, voice interaction, gesture-based cursor control, dynamic themes, animated interfaces, project case studies, and responsive UI.',
+      highlights: [
+        'Gemini-powered portfolio AI assistant',
+        'Voice AI interaction',
+        'MediaPipe hand gesture control',
+        'Gesture-controlled cursor interaction',
+        'Dynamic visual themes',
+        'Interactive project case studies',
+        'Framer Motion animations',
+        'Responsive Next.js interface',
+        'TypeScript-based architecture',
+        'AI-first portfolio experience',
+      ],
+    },
+  },
 ];

@@ -143,7 +143,7 @@ export default function VoiceController() {
         </div>
 
         <span className="font-mono text-xs font-medium">
-          {listening ? 'Listening...' : 'Voice AI'}
+          {listening ? 'Listening...' : 'Voice Assistant'}
         </span>
       </motion.button>
 

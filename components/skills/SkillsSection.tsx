@@ -54,9 +54,11 @@ export default function SkillsSection() {
           className="mb-12 flex items-center justify-between"
         >
           <div className="flex items-center gap-4">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-400/80">02</span>
+            <p className="text-sm uppercase tracking-[0.25em] text-violet-300">
+            04 — Skills & Tech Stack
+          </p>
             <span className="h-px w-12 bg-white/10" />
-            <span className="text-xs uppercase tracking-[0.25em] text-white/40">Skills & Tech Stack</span>
+            
           </div>
 
           <button

@@ -80,15 +80,11 @@ export default function AboutSection() {
           transition={{ duration: 0.6 }}
           className="mb-16 flex items-center gap-4"
         >
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-emerald-400/70">
-            03
-          </span>
+          <p className="text-sm uppercase tracking-[0.25em] text-violet-300">
+            05 — About
+          </p>
 
           <span className="h-px w-12 bg-white/10" />
-
-          <span className="text-xs uppercase tracking-[0.25em] text-white/30">
-            About
-          </span>
         </motion.div>
 
         {/* Main statement */}

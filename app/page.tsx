@@ -28,11 +28,9 @@ export default function Home() {
 
         <ProjectsSection />
         <ExperienceSection />
-        <AboutSection />
         <HowIWorkSection />
-
         <SkillsSection />
-
+        <AboutSection />
         <ContactSection />
         <Footer />
         <PortfolioAI />

@@ -42,15 +42,11 @@ export default function ContactSection() {
           transition={{ duration: 0.6 }}
           className="mb-16 flex items-center gap-4"
         >
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--primary)]">
-            05
-          </span>
+          <p className="text-sm uppercase tracking-[0.25em] text-violet-300">
+            06 — Contact
+          </p>
 
           <span className="h-px w-12 bg-white/10" />
-
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-white/30">
-            Contact
-          </span>
         </motion.div>
 
         {/* Main terminal */}
@@ -96,7 +92,7 @@ export default function ContactSection() {
             </div>
 
             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/20">
-              PORTFOLIO_OS / 05
+              PORTFOLIO_OS / 06
             </span>
           </div>
 

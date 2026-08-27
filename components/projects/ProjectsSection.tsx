@@ -9,7 +9,7 @@ import ProjectCaseStudyModal from './ProjectCaseStudyModal';
 import { soundEngine } from '@/lib/sound/soundEngine';
 import { ArrowUpRight, Code2, ExternalLink, GitBranch, Filter, Sparkles } from 'lucide-react';
 
-const FILTER_TAGS = ['All', 'Python', 'Flask', 'React', 'Next.js', 'Machine Learning', 'Vue'];
+const FILTER_TAGS = ['All', 'Python', 'Flask', 'React', 'Next.js', 'Machine Learning', 'Vue', 'TypeScript'];
 
 export default function ProjectsSection() {
   const { osEntered, projectFilterTag, setProjectFilterTag } = usePortfolio();

@@ -14,11 +14,11 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
   {
     id: 'chibify',
     role: 'Subtitle Editor & Script Writer',
-    organization: 'Chibify Entertainment Ltd.',
-    location: 'Chhattisgarh',
+    organization: 'Lapsy Studios',
+    location: 'Remote',
     type: 'Current',
     startDate: 'Feb 2025',
-    endDate: 'Present',
+    endDate: 'Aug 2025',
     description:
       'Working across subtitle creation, script writing, localization, proofreading, and quality control for digital content.',
     highlights: [
@@ -37,7 +37,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
     location: 'Ayodhya',
     type: 'Self-employed',
     startDate: 'Jul 2024',
-    endDate: 'Present',
+    endDate: 'Oct 2024',
     description:
       'Working independently on mathematics and computing education while developing structured approaches to teaching, debugging, and technical problem solving.',
     highlights: [
@@ -50,7 +50,7 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
 
   {
     id: 'school-of-core-ai',
-    role: 'Blog & Content Writer',
+    role: 'Technical Content Writer',
     organization: 'School of Core AI',
     location: 'Virtual',
     type: 'Internship',
