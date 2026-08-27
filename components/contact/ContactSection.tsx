@@ -6,11 +6,24 @@ import {
   Mail,
   Terminal,
 } from 'lucide-react';
-import { FaGithub, FaLinkedin, FaLinkedinIn } from 'react-icons/fa6';
+import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 import { usePortfolio } from '@/stores/portfolio-store';
+import { socials } from '@/data/socials';
 
 export default function ContactSection() {
   const { osEntered } = usePortfolio();
+
+  const email = 'shashi873kant@gmail.com';
+
+  const openGmail = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
+
+    window.open(
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  };
 
   return (
     <section
@@ -119,7 +132,12 @@ export default function ContactSection() {
               {/* Primary action */}
               <div className="mt-10">
                 <a
-                  href="mailto:your-email@example.com"
+                  href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+                    email,
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="
                     group inline-flex items-center gap-3
                     rounded-full
@@ -155,9 +173,10 @@ export default function ContactSection() {
 
                   {/* GitHub */}
                   <a
-                    href="https://github.com/i-shashikant"
+                    href={socials.github}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                     className="
                       group flex items-center justify-between
                       rounded-2xl
@@ -188,7 +207,10 @@ export default function ContactSection() {
 
                   {/* LinkedIn */}
                   <a
-                    href="#"
+                    href="https://www.linkedin.com/in/i-shashikant"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                     className="
                       group flex items-center justify-between
                       rounded-2xl
