@@ -293,34 +293,57 @@ export default function PortfolioAI() {
     <>
       {/* Floating button */}
       <motion.button
-        type="button"
-        onClick={() => setOpen((current) => !current)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="
-          fixed
-          bottom-6
-          right-6
-          z-50
-          flex
-          h-14
-          w-14
-          items-center
-          justify-center
-          rounded-full
-          border
-          border-white/10
-          bg-white/[0.06]
-          text-white
-          shadow-2xl
-          backdrop-blur-xl
-        "
-        aria-label="Open Portfolio AI"
-      >
-        <span className="text-lg">
-          {open ? '×' : '✦'}
-        </span>
-      </motion.button>
+  type="button"
+  onClick={() => setOpen((current) => !current)}
+  whileHover={{ scale: 1.03 }}
+  whileTap={{ scale: 0.96 }}
+  className="
+    group fixed bottom-6 right-6 z-50
+    flex items-center gap-3
+    rounded-2xl
+    border border-violet-400/20
+    bg-[#0b0d1a]/90
+    px-3 py-2.5
+    text-white
+    shadow-2xl shadow-black/30
+    backdrop-blur-xl
+    transition-all duration-300
+    hover:border-violet-400/40
+    hover:bg-violet-500/[0.08]
+    hover:shadow-[0_0_40px_rgba(139,92,246,0.18)]
+  "
+  aria-label="Open Portfolio AI"
+>
+  {/* AI Icon */}
+  <span
+    className="
+      flex h-9 w-9 items-center justify-center
+      rounded-xl
+      border border-violet-400/20
+      bg-violet-500/10
+      text-violet-300
+      transition-all duration-300
+      group-hover:border-violet-400/40
+      group-hover:bg-violet-500/20
+      group-hover:rotate-6
+    "
+  >
+    <span className="text-lg">
+      {open ? '×' : '✦'}
+    </span>
+  </span>
+
+  {/* Label */}
+  <span className="hidden pr-1 text-left sm:block">
+    <span className="block text-xs font-semibold text-white/90">
+      Ask AI
+    </span>
+
+    <span className="block text-[10px] text-white/35">
+      Portfolio Assistant
+    </span>
+  </span>
+</motion.button>
 
       {/* Chat */}
       <AnimatePresence>
@@ -434,7 +457,7 @@ export default function PortfolioAI() {
             </div>
 
             {/* Suggested questions */}
-            <div className="flex gap-2 overflow-x-auto px-5 pb-3">
+            <div className="flex gap-2 overflow-x-auto px-6 pb-2 ">
               {[
                 'Tell me about CampusChaupal',
                 'What are his ML projects?',
