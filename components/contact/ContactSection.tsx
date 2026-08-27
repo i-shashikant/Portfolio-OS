@@ -150,9 +150,7 @@ export default function ContactSection() {
                   "
                 >
                   <Mail size={16} />
-
-                  Start a conversation
-
+                  <span className="text-black">Start a conversation</span>
                   <ArrowUpRight
                     size={16}
                     className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
