@@ -44,9 +44,11 @@ export default function ProjectsSection() {
           className="mb-12 flex items-center justify-between"
         >
           <div className="flex items-center gap-4">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-violet-400">01</span>
+            <p className="text-sm uppercase tracking-[0.25em] text-violet-300">
+            01 — Selected Works & Systems
+          </p>
             <span className="h-px w-12 bg-white/10" />
-            <span className="text-xs uppercase tracking-[0.25em] text-white/40">Selected Works & Systems</span>
+            <span className="text-xs uppercase tracking-[0.25em] text-white/40"></span>
           </div>
 
           

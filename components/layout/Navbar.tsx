@@ -8,6 +8,7 @@ import { usePortfolio } from '@/stores/portfolio-store';
 import Container from '@/components/ui/Container';
 import { socials } from '@/data/socials';
 
+
 const navItems = [
   { label: 'Work', href: '#projects' },
   { label: 'About', href: '#about' },
@@ -16,6 +17,7 @@ const navItems = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { setAiOpen } = usePortfolio();
 
   const scrollTo = (href: string) => {
     document
@@ -79,14 +81,7 @@ export default function Navbar() {
               <FaGithub size={18} />
             </a>
 
-            <button
-            type="button"
-            // onClick={() => setAiOpen(true)}
-              className="hidden items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-3 py-2 text-sm text-violet-200 transition hover:bg-violet-500/20 sm:flex"
-            >
-              <Sparkles size={16} />
-              <span>AI</span>
-            </button>
+            
 
             <button
               type="button"

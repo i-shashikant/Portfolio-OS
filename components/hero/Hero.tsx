@@ -1,5 +1,5 @@
 'use client';
-
+import { useState } from 'react';
 import {
   motion,
   useMotionValue,
@@ -9,10 +9,18 @@ import {
 } from 'framer-motion';
 import { usePortfolio } from '@/stores/portfolio-store';
 import ParticleField from '@/components/hero/ParticleField';
+import { Palette } from 'lucide-react';
 
 export default function Hero() {
 
-  const { osEntered, openSection } = usePortfolio();
+  const {
+  osEntered,
+  openSection,
+  theme,
+  setTheme,
+} = usePortfolio();
+
+const [themeOpen, setThemeOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   const mouseX = useMotionValue(0);
@@ -69,6 +77,52 @@ export default function Hero() {
       "
     >
       <ParticleField />
+      {/* Theme control */}
+<motion.div
+  initial={{ opacity: 0, y: -10 }}
+  animate={{
+    opacity: osEntered ? 1 : 0,
+    y: osEntered ? 0 : -10,
+  }}
+  transition={{
+    duration: 0.6,
+    delay: 0.5,
+  }}
+  className="absolute right-6 top-24 z-30"
+>
+  <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/30 p-1 backdrop-blur-xl">
+    {[
+      { id: 'dark', label: 'Dark' },
+      { id: 'cyberpunk', label: 'Cyber' },
+      { id: 'obsidian', label: 'Obsidian' },
+      { id: 'matrix', label: 'Matrix' },
+    ].map((item) => {
+      const active = theme === item.id;
+
+      return (
+        <button
+          key={item.id}
+          type="button"
+          onClick={() => setTheme(item.id as typeof theme)}
+          className={`
+            rounded-full px-3 py-1.5
+            text-[10px] font-mono uppercase
+            tracking-wider transition-all duration-200
+            ${
+              active
+                ? 'bg-white text-black'
+                : 'text-white/40 hover:bg-white/10 hover:text-white'
+            }
+          `}
+          aria-label={`Switch to ${item.label} theme`}
+          aria-pressed={active}
+        >
+          {item.label}
+        </button>
+      );
+    })}
+  </div>
+</motion.div>
       {/* Ambient cursor glow */}
       <motion.div
         className="
@@ -76,7 +130,7 @@ export default function Hero() {
           h-[500px] w-[500px]
           -translate-x-1/2 -translate-y-1/2
           rounded-full
-          bg-violet-500/[0.08]
+          bg-[var(--glow)]
           blur-[120px]
         "
         style={{
@@ -117,7 +171,14 @@ export default function Hero() {
           }}
           className="mb-8 flex items-center gap-3"
         >
-          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+          <span
+  className="
+    h-2 w-2
+    rounded-full
+    bg-[var(--primary)]
+    shadow-[0_0_12px_var(--primary)]
+  "
+/>
 
           <span className="text-xs uppercase tracking-[0.25em] text-white/40">
             Data Science · Software · AI
@@ -148,7 +209,7 @@ export default function Hero() {
           "
         >
           Shashikant
-          <span className="text-white/20">.</span>
+          <span className="text-[var(--primary)]">.</span>
         </motion.h1>
 
         {/* Description */}

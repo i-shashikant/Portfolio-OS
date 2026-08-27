@@ -7,7 +7,7 @@ import { soundEngine } from '@/lib/sound/soundEngine';
 import { Search, Terminal, Hand, Volume2, Briefcase, User, Code2, FlaskConical, Mail, Home, Command, ArrowRight } from 'lucide-react';
 
 export default function OSCommandPalette() {
-  const { openSection, toggleGestureGuide, toggleDevMode, toggleGestures, setTheme } = usePortfolio();
+  const { openSection, toggleGestureGuide, toggleDevMode, toggleGestures } = usePortfolio();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
 
@@ -37,10 +37,6 @@ export default function OSCommandPalette() {
     { id: 'gestures', label: 'Toggle Hand Gesture Controls', category: 'OS System', icon: <Hand size={16} />, action: () => toggleGestures() },
     { id: 'gesture-guide', label: 'Open Gesture Matrix Guide', category: 'OS System', icon: <Command size={16} />, action: () => toggleGestureGuide() },
     { id: 'dev-mode', label: 'Unlock Developer Mode (🤘)', category: 'OS System', icon: <Terminal size={16} />, action: () => toggleDevMode() },
-    { id: 'theme-dark', label: 'Theme: Dark OS (Default)', category: 'Themes', icon: <Command size={16} />, action: () => setTheme('dark') },
-    { id: 'theme-cyberpunk', label: 'Theme: Cyberpunk Neon', category: 'Themes', icon: <Command size={16} />, action: () => setTheme('cyberpunk') },
-    { id: 'theme-obsidian', label: 'Theme: Glass Obsidian', category: 'Themes', icon: <Command size={16} />, action: () => setTheme('obsidian') },
-    { id: 'theme-matrix', label: 'Theme: Emerald Matrix', category: 'Themes', icon: <Command size={16} />, action: () => setTheme('matrix') },
     { id: 'sound', label: 'Toggle Web Audio SFX', category: 'Preferences', icon: <Volume2 size={16} />, action: () => soundEngine.toggleSound() },
   ];
 

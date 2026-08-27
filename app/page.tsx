@@ -7,12 +7,17 @@ import ContactSection from '@/components/contact/ContactSection';
 import Footer from '@/components/layout/Footer';
 import PortfolioAI from '@/components/ai/PortfolioAI';
 import ExperienceSection from '@/components/experience/ExperienceSection';
+import HowIWorkSection from '@/components/HowIWork/HowIWorkSection';
 
+// 'use client';
+
+// import { usePortfolioTheme } from '@/hooks/usePortfolioTheme';
 
 
 
 
 export default function Home() {
+  // usePortfolioTheme();
   return (
     <PageTransition>
       <main>
@@ -24,6 +29,7 @@ export default function Home() {
         <ProjectsSection />
         <ExperienceSection />
         <AboutSection />
+        <HowIWorkSection />
 
         <SkillsSection />
 

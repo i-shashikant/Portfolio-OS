@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -14,44 +15,71 @@ import { projects } from '@/data/projects';
 export type PortfolioSection =
   | 'home'
   | 'projects'
+  | 'experience'
   | 'about'
   | 'skills'
   | 'contact';
 
-export type OSTheme = 'dark' | 'cyberpunk' | 'obsidian' | 'matrix';
+export type OSTheme =
+  | 'dark'
+  | 'cyberpunk'
+  | 'obsidian'
+  | 'matrix';
 
 type PortfolioState = {
   section: PortfolioSection;
+
   activeProjectIndex: number;
+
   osEntered: boolean;
 
   gesturesEnabled: boolean;
+
   devModeOpen: boolean;
+
   gestureGuideOpen: boolean;
+
   gestureToast: string | null;
 
   theme: OSTheme;
+
   projectFilterTag: string;
+
   gitHubWidgetOpen: boolean;
+
   aiOpen: boolean;
-  setAiOpen: (open: boolean) => void;
 
   enterOS: () => void;
+
   goHome: () => void;
+
   openSection: (section: PortfolioSection) => void;
 
   nextProject: () => void;
+
   previousProject: () => void;
+
   openProject: (slug: string) => void;
+
   setActiveProject: (index: number) => void;
+
   toggleGestures: () => void;
+
   toggleDevMode: () => void;
+
   toggleGestureGuide: () => void;
+
   setGestureGuideOpen: (open: boolean) => void;
+
   triggerGestureToast: (message: string) => void;
+
   setTheme: (theme: OSTheme) => void;
+
   setProjectFilterTag: (tag: string) => void;
 
+  toggleGitHubWidget: () => void;
+
+  setAiOpen: (open: boolean) => void;
 };
 
 const PortfolioContext = createContext<PortfolioState | null>(null);
@@ -60,7 +88,6 @@ export function PortfolioProvider({
   children,
 }: {
   children: ReactNode;
-  
 }) {
   const [section, setSection] =
     useState<PortfolioSection>('home');
@@ -68,43 +95,213 @@ export function PortfolioProvider({
   const [activeProjectIndex, setActiveProjectIndex] =
     useState(0);
 
+  const [osEntered, setOsEntered] =
+    useState(false);
 
-  const [osEntered, setOsEntered] = useState(false);
+  const [gesturesEnabled, setGesturesEnabled] =
+    useState(false);
 
-  const [gesturesEnabled, setGesturesEnabled] = useState(false);
-  const [devModeOpen, setDevModeOpen] = useState(false);
-  const [gestureGuideOpen, setGestureGuideOpenState] = useState(false);
-  const [gestureToast, setGestureToast] = useState<string | null>(null);
-  
+  const [devModeOpen, setDevModeOpen] =
+    useState(false);
+
+  const [gestureGuideOpen, setGestureGuideOpenState] =
+    useState(false);
+
+  const [gestureToast, setGestureToast] =
+    useState<string | null>(null);
+
+  const [theme, setThemeState] =
+    useState<OSTheme>('dark');
+
+  const [projectFilterTag, setProjectFilterTagState] =
+    useState('All');
+
+  const [gitHubWidgetOpen, setGitHubWidgetOpen] =
+    useState(false);
+
+  const [aiOpen, setAiOpen] =
+    useState(false);
+
+  /*
+   * --------------------------------
+   * Restore saved theme
+   * --------------------------------
+   */
+
+  useEffect(() => {
+    const savedTheme =
+      window.localStorage.getItem(
+        'portfolio-theme',
+      ) as OSTheme | null;
+
+    if (
+      savedTheme === 'dark' ||
+      savedTheme === 'cyberpunk' ||
+      savedTheme === 'obsidian' ||
+      savedTheme === 'matrix'
+    ) {
+      setThemeState(savedTheme);
+
+      document.documentElement.setAttribute(
+        'data-theme',
+        savedTheme,
+      );
+    } else {
+      document.documentElement.setAttribute(
+        'data-theme',
+        'dark',
+      );
+    }
+  }, []);
+
+  /*
+   * --------------------------------
+   * Gestures
+   * --------------------------------
+   */
 
   const toggleGestures = useCallback(() => {
     setGesturesEnabled((current) => !current);
   }, []);
 
+  /*
+   * --------------------------------
+   * Developer mode
+   * --------------------------------
+   */
+
   const toggleDevMode = useCallback(() => {
     setDevModeOpen((current) => !current);
   }, []);
+
+  /*
+   * --------------------------------
+   * Gesture guide
+   * --------------------------------
+   */
 
   const toggleGestureGuide = useCallback(() => {
     setGestureGuideOpenState((current) => !current);
   }, []);
 
-  const setGestureGuideOpen = useCallback((open: boolean) => {
-    setGestureGuideOpenState(open);
-  }, []);
+  const setGestureGuideOpen = useCallback(
+    (open: boolean) => {
+      setGestureGuideOpenState(open);
+    },
+    [],
+  );
 
-  const triggerGestureToast = useCallback((message: string) => {
-    setGestureToast(message);
-    setTimeout(() => {
-      setGestureToast((current) => (current === message ? null : current));
-    }, 2500);
-  }, []);
+  /*
+   * --------------------------------
+   * Gesture toast
+   * --------------------------------
+   */
 
-  const setActiveProject = useCallback((index: number) => {
-    if (index < 0 || index >= projects.length) return;
+  const triggerGestureToast = useCallback(
+    (message: string) => {
+      setGestureToast(message);
 
-    setActiveProjectIndex(index);
-    }, []);
+      setTimeout(() => {
+        setGestureToast((current) =>
+          current === message ? null : current,
+        );
+      }, 2500);
+    },
+    [],
+  );
+
+  /*
+   * --------------------------------
+   * Projects
+   * --------------------------------
+   */
+
+  const setActiveProject = useCallback(
+    (index: number) => {
+      if (
+        index < 0 ||
+        index >= projects.length
+      ) {
+        return;
+      }
+
+      setActiveProjectIndex(index);
+    },
+    [],
+  );
+
+  const nextProject = useCallback(() => {
+    setActiveProjectIndex((current) =>
+      current === projects.length - 1
+        ? 0
+        : current + 1,
+    );
+
+    if (section !== 'projects') {
+      setSection('projects');
+
+      requestAnimationFrame(() => {
+        document
+          .getElementById('projects')
+          ?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+      });
+    }
+  }, [section]);
+
+  const previousProject = useCallback(() => {
+    setActiveProjectIndex((current) =>
+      current === 0
+        ? projects.length - 1
+        : current - 1,
+    );
+
+    if (section !== 'projects') {
+      setSection('projects');
+
+      requestAnimationFrame(() => {
+        document
+          .getElementById('projects')
+          ?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+      });
+    }
+  }, [section]);
+
+  const openProject = useCallback(
+    (slug: string) => {
+      const index = projects.findIndex(
+        (project) => project.slug === slug,
+      );
+
+      if (index === -1) {
+        return;
+      }
+
+      setActiveProjectIndex(index);
+      setSection('projects');
+
+      requestAnimationFrame(() => {
+        document
+          .getElementById('projects')
+          ?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+      });
+    },
+    [],
+  );
+
+  /*
+   * --------------------------------
+   * Navigation
+   * --------------------------------
+   */
 
   const enterOS = useCallback(() => {
     setOsEntered(true);
@@ -124,109 +321,140 @@ export function PortfolioProvider({
     (nextSection: PortfolioSection) => {
       setSection(nextSection);
 
-      const element = document.getElementById(
-        nextSection === 'home'
-          ? 'hero'
-          : nextSection === 'projects'
-            ? 'projects'
-            : nextSection,
-      );
+      const targetId = nextSection;
 
-      element?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
+      requestAnimationFrame(() => {
+        document
+          .getElementById(targetId)
+          ?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
       });
     },
     [],
   );
 
-  const nextProject = useCallback(() => {
-    setActiveProjectIndex((current) =>
-        current === projects.length - 1 ? 0 : current + 1,
-    );
+  /*
+   * --------------------------------
+   * Theme
+   * --------------------------------
+   */
 
-    if (section !== 'projects') {
-        openSection('projects');
-    }
-    }, [section, openSection]);
+  const setTheme = useCallback(
+    (newTheme: OSTheme) => {
+      setThemeState(newTheme);
 
-  const previousProject = useCallback(() => {
-    setActiveProjectIndex((current) =>
-        current === 0 ? projects.length - 1 : current - 1,
-    );
-
-    if (section !== 'projects') {
-        openSection('projects');
-    }
-    }, [section, openSection]);
-
-  const openProject = useCallback(
-    (slug: string) => {
-      const index = projects.findIndex(
-        (project) => project.slug === slug,
+      document.documentElement.setAttribute(
+        'data-theme',
+        newTheme,
       );
 
-      if (index === -1) return;
-
-      setActiveProjectIndex(index);
-      openSection('projects');
+      window.localStorage.setItem(
+        'portfolio-theme',
+        newTheme,
+      );
     },
-    [openSection],
+    [],
   );
 
-  const [theme, setThemeState] = useState<OSTheme>('dark');
-  const [projectFilterTag, setProjectFilterTagState] = useState<string>('All');
-  const [gitHubWidgetOpen, setGitHubWidgetOpen] = useState(false);
-  const [aiOpen, setAiOpen] = useState(false);
+  /*
+   * --------------------------------
+   * Project filter
+   * --------------------------------
+   */
 
-  const setTheme = useCallback((newTheme: OSTheme) => {
-    setThemeState(newTheme);
-    if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', newTheme);
-    }
-  }, []);
+  const setProjectFilterTag = useCallback(
+    (tag: string) => {
+      setProjectFilterTagState(tag);
+    },
+    [],
+  );
 
-  const setProjectFilterTag = useCallback((tag: string) => {
-    setProjectFilterTagState(tag);
-  }, []);
+  /*
+   * --------------------------------
+   * GitHub widget
+   * --------------------------------
+   */
 
   const toggleGitHubWidget = useCallback(() => {
     setGitHubWidgetOpen((current) => !current);
   }, []);
 
-  const value = useMemo(
+  /*
+   * --------------------------------
+   * AI
+   * --------------------------------
+   */
+
+  const setAiOpenState = useCallback(
+    (open: boolean) => {
+      setAiOpen(open);
+    },
+    [],
+  );
+
+  /*
+   * --------------------------------
+   * Context value
+   * --------------------------------
+   */
+
+  const value = useMemo<PortfolioState>(
     () => ({
       section,
+
       activeProjectIndex,
+
       osEntered,
 
       gesturesEnabled,
+
       devModeOpen,
+
       gestureGuideOpen,
+
       gestureToast,
 
       theme,
+
       projectFilterTag,
+
       gitHubWidgetOpen,
 
+      aiOpen,
+
       enterOS,
+
       goHome,
+
       openSection,
 
       nextProject,
+
       previousProject,
+
       openProject,
+
       setActiveProject,
+
       toggleGestures,
+
       toggleDevMode,
+
       toggleGestureGuide,
+
       setGestureGuideOpen,
+
       triggerGestureToast,
+
       setTheme,
+
       setProjectFilterTag,
+
       toggleGitHubWidget,
-      aiOpen,
-      setAiOpen,
+
+      setAiOpen: setAiOpenState,
     }),
     [
       section,
@@ -239,6 +467,7 @@ export function PortfolioProvider({
       theme,
       projectFilterTag,
       gitHubWidgetOpen,
+      aiOpen,
       enterOS,
       goHome,
       openSection,
@@ -254,8 +483,7 @@ export function PortfolioProvider({
       setTheme,
       setProjectFilterTag,
       toggleGitHubWidget,
-      aiOpen,
-      setAiOpen,
+      setAiOpenState,
     ],
   );
 
