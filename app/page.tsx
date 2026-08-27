@@ -22,10 +22,7 @@ export default function Home() {
     <PageTransition>
       <main>
 
-        <section id="hero">
           <Hero />
-        </section>
-
         <ProjectsSection />
         <ExperienceSection />
         <HowIWorkSection />

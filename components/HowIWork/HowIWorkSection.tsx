@@ -51,7 +51,7 @@ const PROCESS = [
 export default function HowIWorkSection() {
   return (
     <section
-      id="process"
+      id="how-i-work"
       className="relative overflow-hidden px-6 py-32 md:py-40"
     >
       {/* Background grid */}

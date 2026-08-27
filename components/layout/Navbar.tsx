@@ -36,10 +36,38 @@ export default function Navbar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="fixed left-50 right-25 top-2 z-50 px-4 pt-3 md:px-5"
+      className="
+        fixed
+        inset-x-0
+        top-2
+        z-50
+        px-3
+        sm:px-4
+        md:px-5
+      "
     >
       <Container>
-        <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 shadow-2xl shadow-black/20 backdrop-blur-xl md:px-10">
+        <nav
+          className="
+            mx-auto
+            flex
+            h-14
+            w-full
+            max-w-6xl
+            items-center
+            justify-between
+            rounded-2xl
+            border
+            border-white/10
+            bg-white/[0.04]
+            px-3
+            shadow-2xl
+            shadow-black/20
+            backdrop-blur-xl
+            sm:px-4
+            md:px-10
+          "
+        >
           {/* Logo */}
           <button
             type="button"
@@ -49,28 +77,44 @@ export default function Navbar() {
                 behavior: 'smooth',
               })
             }
-            className="group flex shrink-0 items-center gap-2"
+            className="
+              group
+              flex
+              shrink-0
+              items-center
+              gap-2
+            "
           >
             <span
               className="
-                flex h-9 w-9 items-center justify-center
-                rounded-xl
+                flex
+                h-8
+                w-8
+                items-center
+                justify-center
+                rounded-lg
                 bg-white
-                text-sm font-bold text-black
-                transition-transform duration-300
+                text-sm
+                font-bold
+                text-black
+                transition-transform
+                duration-300
                 group-hover:rotate-6
+                sm:h-9
+                sm:w-9
+                sm:rounded-xl
               "
             >
               P
             </span>
 
-            <span className="hidden font-semibold tracking-tight sm:block">
+            <span className="font-semibold tracking-tight text-sm text-white">
               Portfolio OS
             </span>
           </button>
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center gap-1  lg:flex">
+          <div className="hidden items-center gap-1 lg:flex">
             {navItems.map((item) => (
               <button
                 key={item.href}
@@ -78,11 +122,13 @@ export default function Navbar() {
                 onClick={() => scrollTo(item.href)}
                 className="
                   rounded-xl
-                  px-2.5 py-2
+                  px-2.5
+                  py-2
                   text-xs
                   font-semibold
                   text-white/80
-                  transition-all duration-300
+                  transition-all
+                  duration-300
                   hover:bg-white/5
                   hover:text-white
                   xl:px-5
@@ -94,14 +140,17 @@ export default function Navbar() {
           </div>
 
           {/* Actions */}
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+
             {/* GitHub */}
             <a
               href={socials.github}
               target="_blank"
               rel="noopener noreferrer"
               className="
-                hidden rounded-xl p-2.5
+                hidden
+                rounded-xl
+                p-2.5
                 text-white/60
                 transition
                 hover:bg-white/5
@@ -128,13 +177,17 @@ export default function Navbar() {
                   : 'Enable gesture control'
               }
               className={`
-                flex items-center gap-2
+                hidden
+                items-center
+                gap-2
                 rounded-full
                 border
-                px-3.5 py-2
+                px-3.5
+                py-2
                 text-xs
-                transition-all duration-300
-
+                transition-all
+                duration-300
+                sm:flex
                 ${
                   gesturesEnabled
                     ? `
@@ -155,7 +208,9 @@ export default function Navbar() {
             >
               <span
                 className={`
-                  h-2 w-2 rounded-full
+                  h-2
+                  w-2
+                  rounded-full
                   ${
                     gesturesEnabled
                       ? 'bg-emerald-400'
@@ -172,7 +227,12 @@ export default function Navbar() {
               type="button"
               onClick={() => setOpen((value) => !value)}
               className="
-                rounded-xl p-2
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-xl
                 text-white/70
                 transition
                 hover:bg-white/5
@@ -194,12 +254,15 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
             className="
-              mx-auto mt-2
-              max-w-7xl
+              mx-auto
+              mt-2
+              w-full
+              max-w-6xl
               overflow-hidden
               rounded-2xl
-              border border-white/10
-              bg-black/70
+              border
+              border-white/10
+              bg-black/80
               p-2
               shadow-2xl
               backdrop-blur-xl
@@ -218,9 +281,11 @@ export default function Navbar() {
                   delay: index * 0.03,
                 }}
                 className="
-                  block w-full
+                  block
+                  w-full
                   rounded-xl
-                  px-4 py-3
+                  px-4
+                  py-3
                   text-left
                   text-sm
                   text-white/60

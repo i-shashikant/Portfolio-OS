@@ -27,7 +27,7 @@ export default function GestureHUD({
   if (!gesturesEnabled) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] flex flex-col items-end gap-3 pointer-events-auto">
+    <div className="fixed bottom-6 right-6 z-[9999] hidden md:flex flex-col items-end gap-3 pointer-events-auto">
       {/* Toast Notification */}
       <AnimatePresence>
         {gestureToast && (

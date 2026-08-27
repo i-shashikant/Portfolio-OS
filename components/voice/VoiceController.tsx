@@ -122,7 +122,7 @@ export default function VoiceController() {
   if (!supported) return null;
 
   return (
-    <div className="fixed bottom-6 left-6 z-[9998] flex items-center gap-3 pointer-events-auto">
+    <div className="fixed bottom-6 left-6 z-[9998] hidden md:flex items-center gap-3 pointer-events-auto">
       <motion.button
         type="button"
         onClick={toggleListening}
