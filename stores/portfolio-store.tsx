@@ -16,8 +16,9 @@ export type PortfolioSection =
   | 'home'
   | 'projects'
   | 'experience'
-  | 'about'
+  | 'how-i-work'
   | 'skills'
+  | 'about'
   | 'contact';
 
 export type OSTheme =

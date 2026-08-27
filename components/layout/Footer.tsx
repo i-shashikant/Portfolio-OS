@@ -29,8 +29,10 @@ export default function Footer() {
         <nav className="flex flex-wrap gap-5">
           {[
             ['Work', 'projects'],
-            ['About', 'about'],
+            ['Experience', 'experience'],
+            ['How I Work', 'how-i-work'],
             ['Skills', 'skills'],
+            ['About', 'about'],
             ['Contact', 'contact'],
           ].map(([label, section]) => (
             <button
@@ -40,8 +42,10 @@ export default function Footer() {
                 openSection(
                   section as
                     | 'projects'
-                    | 'about'
+                    | 'experience'
+                    | 'how-i-work'
                     | 'skills'
+                    | 'about'
                     | 'contact',
                 )
               }
