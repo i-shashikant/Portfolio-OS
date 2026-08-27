@@ -247,9 +247,9 @@ export default function Navbar() {
                 hover:text-violet-200
               "
             >
-              <Command size={12} className="text-violet-400" />
+              
               <kbd className="font-mono text-[10px] font-semibold tracking-wider text-white/80">
-                ⌘K
+                ⌘ + K
               </kbd>
             </button>
 
