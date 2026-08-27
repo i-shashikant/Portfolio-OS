@@ -48,6 +48,8 @@ type PortfolioState = {
 
   gitHubWidgetOpen: boolean;
 
+  commandPaletteOpen: boolean;
+
   aiOpen: boolean;
 
   enterOS: () => void;
@@ -79,6 +81,8 @@ type PortfolioState = {
   setProjectFilterTag: (tag: string) => void;
 
   toggleGitHubWidget: () => void;
+
+  toggleCommandPalette: () => void;
 
   setAiOpen: (open: boolean) => void;
 };
@@ -120,8 +124,15 @@ export function PortfolioProvider({
   const [gitHubWidgetOpen, setGitHubWidgetOpen] =
     useState(false);
 
+  const [commandPaletteOpen, setCommandPaletteOpen] =
+    useState(false);
+
   const [aiOpen, setAiOpen] =
     useState(false);
+
+  const toggleCommandPalette = useCallback(() => {
+    setCommandPaletteOpen((current) => !current);
+  }, []);
 
   /*
    * --------------------------------
@@ -423,6 +434,8 @@ export function PortfolioProvider({
 
       gitHubWidgetOpen,
 
+      commandPaletteOpen,
+
       aiOpen,
 
       enterOS,
@@ -454,6 +467,8 @@ export function PortfolioProvider({
       setProjectFilterTag,
 
       toggleGitHubWidget,
+
+      toggleCommandPalette,
 
       setAiOpen: setAiOpenState,
     }),
@@ -468,6 +483,7 @@ export function PortfolioProvider({
       theme,
       projectFilterTag,
       gitHubWidgetOpen,
+      commandPaletteOpen,
       aiOpen,
       enterOS,
       goHome,
@@ -484,6 +500,7 @@ export function PortfolioProvider({
       setTheme,
       setProjectFilterTag,
       toggleGitHubWidget,
+      toggleCommandPalette,
       setAiOpenState,
     ],
   );

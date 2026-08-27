@@ -13,6 +13,7 @@ import GestureGuideModal from '@/components/gestures/GestureGuideModal';
 import DeveloperModeEasterEgg from '@/components/gestures/DeveloperModeEasterEgg';
 import OSCommandPalette from '@/components/os/OSCommandPalette';
 import VoiceController from '@/components/voice/VoiceController';
+import GlobalCursorGlow from '@/components/ui/GlobalCursorGlow';
 
 import './globals.css';
 
@@ -30,6 +31,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <PortfolioProvider>
+          {/* Theme-reactive global mouse cursor glow ball */}
+          <GlobalCursorGlow />
+
           {/* Portfolio OS boot / entry screen */}
           <OSBootScreen />
 

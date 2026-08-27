@@ -7,8 +7,7 @@ import { soundEngine } from '@/lib/sound/soundEngine';
 import { Search, Terminal, Hand, Volume2, Briefcase, User, Code2, FlaskConical, Mail, Home, Command, ArrowRight } from 'lucide-react';
 
 export default function OSCommandPalette() {
-  const { openSection, toggleGestureGuide, toggleDevMode, toggleGestures } = usePortfolio();
-  const [open, setOpen] = useState(false);
+  const { openSection, toggleGestureGuide, toggleDevMode, toggleGestures, commandPaletteOpen, toggleCommandPalette, setTheme, toggleGitHubWidget } = usePortfolio();
   const [query, setQuery] = useState('');
 
   // Shortcut key listener (Cmd+K or Ctrl+K)
@@ -16,17 +15,17 @@ export default function OSCommandPalette() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setOpen((prev) => !prev);
+        toggleCommandPalette();
         soundEngine.playClick();
       }
-      if (e.key === 'Escape' && open) {
-        setOpen(false);
+      if (e.key === 'Escape' && commandPaletteOpen) {
+        toggleCommandPalette();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open]);
+  }, [commandPaletteOpen, toggleCommandPalette]);
 
   const commands = [
     { id: 'home', label: 'Go to Home Overview', category: 'Navigation', icon: <Home size={16} />, action: () => openSection('home') },
@@ -47,18 +46,18 @@ export default function OSCommandPalette() {
   const handleSelect = (action: () => void) => {
     soundEngine.playClick();
     action();
-    setOpen(false);
+    toggleCommandPalette();
   };
 
   return (
     <AnimatePresence>
-      {open && (
+      {commandPaletteOpen && (
         <div className="fixed inset-0 z-[10005] flex items-start justify-center pt-24 p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
+            onClick={toggleCommandPalette}
             className="absolute inset-0 bg-black/80 backdrop-blur-md"
           />
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Command } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa6';
 import { useState } from 'react';
 
@@ -21,7 +21,7 @@ const navItems = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
-  const { gesturesEnabled, toggleGestures } = usePortfolio();
+  const { gesturesEnabled, toggleGestures, toggleCommandPalette } = usePortfolio();
 
   const scrollTo = (href: string) => {
     document
@@ -220,6 +220,37 @@ export default function Navbar() {
               />
 
               Gestures
+            </button>
+
+            {/* Command Palette Badge */}
+            <button
+              type="button"
+              onClick={toggleCommandPalette}
+              aria-label="Open Command Palette (Cmd + K)"
+              title="Command Palette (Cmd + K)"
+              className="
+                flex
+                items-center
+                gap-1.5
+                rounded-full
+                border
+                border-white/10
+                bg-white/[0.03]
+                px-3
+                py-1.5
+                text-xs
+                text-white/60
+                transition-all
+                duration-300
+                hover:border-violet-400/40
+                hover:bg-violet-500/10
+                hover:text-violet-200
+              "
+            >
+              <Command size={12} className="text-violet-400" />
+              <kbd className="font-mono text-[10px] font-semibold tracking-wider text-white/80">
+                ⌘K
+              </kbd>
             </button>
 
             {/* Mobile Menu */}

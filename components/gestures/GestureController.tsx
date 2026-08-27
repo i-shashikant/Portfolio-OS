@@ -111,22 +111,14 @@ export default function GestureController() {
         return;
       }
 
-      // 6. Open Palm Swipes (Scroll Down / Scroll Up)
+      // 6. Open Palm Swipes (Smooth Scroll Down / Scroll Up)
       if (gesture === 'OPEN_PALM') {
-        if (rawVelocity.vy > 0.8 && canTrigger('SWIPE_DOWN', 1000)) {
-          triggerGestureToast('🖐 Swipe Down: Next Section');
-          if (section === 'home') openSection('projects');
-          else if (section === 'projects') openSection('about');
-          else if (section === 'about') openSection('skills');
-          else if (section === 'skills') openSection('contact');
-          else window.scrollBy({ top: 400, behavior: 'smooth' });
-        } else if (rawVelocity.vy < -0.8 && canTrigger('SWIPE_UP', 1000)) {
-          triggerGestureToast('🖐 Swipe Up: Previous Section');
-          if (section === 'contact') openSection('skills');
-          else if (section === 'skills') openSection('about');
-          else if (section === 'about') openSection('projects');
-          else if (section === 'projects') openSection('home');
-          else window.scrollBy({ top: -400, behavior: 'smooth' });
+        if (rawVelocity.vy > 0.5 && canTrigger('SWIPE_DOWN', 500)) {
+          triggerGestureToast('🖐 Scrolling Down');
+          window.scrollBy({ top: 380, behavior: 'smooth' });
+        } else if (rawVelocity.vy < -0.5 && canTrigger('SWIPE_UP', 500)) {
+          triggerGestureToast('🖐 Scrolling Up');
+          window.scrollBy({ top: -380, behavior: 'smooth' });
         }
         return;
       }
