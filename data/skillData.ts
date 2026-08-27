@@ -33,6 +33,7 @@ export const SKILL_CATEGORIES = [
 ];
 
 export const SKILLS_DATA: SkillItem[] = [
+  // LANGUAGES
   {
     id: 'python',
     name: 'Python',
@@ -58,7 +59,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )`,
   },
-
   {
     id: 'javascript',
     name: 'JavaScript',
@@ -79,7 +79,6 @@ X_train, X_test, y_train, y_test = train_test_split(
   setActiveWindow(windowId);
 };`,
   },
-
   {
     id: 'typescript',
     name: 'TypeScript',
@@ -102,7 +101,30 @@ X_train, X_test, y_train, y_test = train_test_split(
   technologies: string[];
 };`,
   },
+  {
+    id: 'java',
+    name: 'Java',
+    category: 'languages',
+    categoryLabel: 'LANGUAGES',
+    description:
+      'Object-oriented programming language used for structured software design, core algorithms, and enterprise backend fundamentals.',
+    strength: 'Working',
+    brandColor: '#ED8B00',
+    glowColor: 'rgba(237, 139, 0, 0.4)',
+    iconType: 'java',
+    highlights: [
+      'Object-Oriented Programming (OOP)',
+      'Data Structures & Algorithms',
+      'Strong static typing & class architecture',
+    ],
+    codeSnippet: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, Portfolio OS!");
+    }
+}`,
+  },
 
+  // FRONTEND
   {
     id: 'react',
     name: 'React',
@@ -129,7 +151,6 @@ return (
   />
 );`,
   },
-
   {
     id: 'nextjs',
     name: 'Next.js',
@@ -156,7 +177,6 @@ return (
   );
 }`,
   },
-
   {
     id: 'vue',
     name: 'Vue.js',
@@ -180,6 +200,7 @@ const applications = ref([]);
 </script>`,
   },
 
+  // BACKEND
   {
     id: 'flask',
     name: 'Flask',
@@ -204,7 +225,26 @@ app = Flask(__name__)
 def health():
     return {"status": "ok"}`,
   },
-
+  {
+    id: 'rest-api',
+    name: 'REST & REST APIs',
+    category: 'backend',
+    categoryLabel: 'BACKEND',
+    description:
+      'Designing, building, and consuming scalable RESTful APIs with structured endpoints, HTTP status codes, and JSON serialization.',
+    strength: 'Strong',
+    brandColor: '#009688',
+    glowColor: 'rgba(0, 150, 136, 0.4)',
+    iconType: 'rest',
+    highlights: [
+      'RESTful endpoint architecture',
+      'JSON request/response serialization',
+      'Authentication & status code handling',
+    ],
+    codeSnippet: `@app.route('/api/v1/projects', methods=['GET'])
+def get_projects():
+    return jsonify({"projects": data}), 200`,
+  },
   {
     id: 'sql',
     name: 'SQL & Databases',
@@ -225,7 +265,50 @@ def health():
 FROM students
 WHERE placement_status = 'eligible';`,
   },
+  {
+    id: 'redis',
+    name: 'Redis',
+    category: 'backend',
+    categoryLabel: 'BACKEND / TOOLS',
+    description:
+      'In-memory key-value data store used for fast caching, session management, and asynchronous task queue message brokering.',
+    strength: 'Working',
+    brandColor: '#DC382D',
+    glowColor: 'rgba(220, 56, 45, 0.4)',
+    iconType: 'redis',
+    highlights: [
+      'In-memory caching for low latency',
+      'Pub/Sub messaging',
+      'Session state storage & key expiration',
+    ],
+    codeSnippet: `import redis
 
+r = redis.Redis(host='localhost', port=6379, db=0)
+r.set('session:token', 'user_id_123', ex=3600)`,
+  },
+  {
+    id: 'celery',
+    name: 'Celery',
+    category: 'backend',
+    categoryLabel: 'BACKEND / TOOLS',
+    description:
+      'Asynchronous task queue system for executing background jobs, scheduled tasks, and heavy computational processing.',
+    strength: 'Working',
+    brandColor: '#37814A',
+    glowColor: 'rgba(55, 129, 74, 0.4)',
+    iconType: 'celery',
+    highlights: [
+      'Asynchronous background task execution',
+      'Redis & RabbitMQ broker integration',
+      'Scheduled cron tasks & worker management',
+    ],
+    codeSnippet: `@celery.task
+def send_async_email(email_address):
+    # Background processing job
+    return True`,
+  },
+
+  // AI & DATA
   {
     id: 'machine-learning',
     name: 'Machine Learning',
@@ -254,7 +337,135 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 model.fit(X_train, y_train)`,
   },
+  {
+    id: 'numpy',
+    name: 'NumPy',
+    category: 'ai-data',
+    categoryLabel: 'AI / DATA',
+    description:
+      'Fundamental package for numerical computing in Python, providing high-performance N-dimensional array processing and mathematical operations.',
+    strength: 'Strong',
+    brandColor: '#013243',
+    glowColor: 'rgba(1, 50, 67, 0.4)',
+    iconType: 'numpy',
+    highlights: [
+      'N-dimensional array manipulation',
+      'Vectorized mathematical operations',
+      'Matrix calculations & linear algebra',
+    ],
+    codeSnippet: `import numpy as np
 
+matrix = np.array([[1, 2], [3, 4]])
+eigenvalues = np.linalg.eigvals(matrix)`,
+  },
+  {
+    id: 'pandas',
+    name: 'Pandas',
+    category: 'ai-data',
+    categoryLabel: 'AI / DATA',
+    description:
+      'Data manipulation and analysis library built on Python, enabling fast data cleaning, filtering, aggregation, and DataFrame operations.',
+    strength: 'Strong',
+    brandColor: '#150458',
+    glowColor: 'rgba(21, 4, 88, 0.4)',
+    iconType: 'pandas',
+    highlights: [
+      'DataFrame manipulation & querying',
+      'Data cleaning & missing value imputation',
+      'Grouping, merging, & time-series analysis',
+    ],
+    codeSnippet: `import pandas as pd
+
+df = pd.read_csv('dataset.csv')
+clean_df = df.dropna().groupby('category').mean()`,
+  },
+  {
+    id: 'scikit-learn',
+    name: 'Scikit-Learn',
+    category: 'ai-data',
+    categoryLabel: 'AI / DATA',
+    description:
+      'Python machine learning library providing efficient tools for predictive data analysis, model training, evaluation, and pipeline building.',
+    strength: 'Core',
+    brandColor: '#F7931E',
+    glowColor: 'rgba(247, 147, 30, 0.4)',
+    iconType: 'scikit-learn',
+    highlights: [
+      'Supervised & unsupervised learning models',
+      'Model fitting, prediction, & metrics',
+      'Preprocessing & pipeline orchestration',
+    ],
+    codeSnippet: `from sklearn.ensemble import RandomForestClassifier
+
+clf = RandomForestClassifier(n_estimators=100)
+clf.fit(X_train, y_train)`,
+  },
+  {
+    id: 'visualization',
+    name: 'Matplotlib & Seaborn',
+    category: 'ai-data',
+    categoryLabel: 'AI / DATA',
+    description:
+      'Data visualization libraries used to create insightful static, animated, and interactive plots for exploratory data analysis.',
+    strength: 'Working',
+    brandColor: '#11557C',
+    glowColor: 'rgba(17, 85, 124, 0.4)',
+    iconType: 'visualization',
+    highlights: [
+      'Exploratory Data Analysis (EDA) charts',
+      'Feature correlation heatmaps & pairplots',
+      'Customized statistical visualization',
+    ],
+    codeSnippet: `import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.heatmap(df.corr(), annot=True)
+plt.show()`,
+  },
+  {
+    id: 'regression-classification',
+    name: 'Regression & Classification',
+    category: 'ai-data',
+    categoryLabel: 'AI / DATA',
+    description:
+      'Building predictive algorithms for continuous target values (Regression) and discrete category labeling (Classification).',
+    strength: 'Strong',
+    brandColor: '#8A2BE2',
+    glowColor: 'rgba(138, 43, 226, 0.4)',
+    iconType: 'ml-modelling',
+    highlights: [
+      'Linear & Logistic Regression',
+      'Decision Trees, Random Forests, & XGBoost',
+      'Classification metrics (Precision, Recall, F1-score)',
+    ],
+    codeSnippet: `from sklearn.metrics import classification_report
+
+y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred))`,
+  },
+  {
+    id: 'cv-tuning',
+    name: 'Cross-Validation & Tuning',
+    category: 'ai-data',
+    categoryLabel: 'AI / DATA',
+    description:
+      'K-fold cross-validation, GridSearchCV, and RandomSearchCV techniques to prevent overfitting and optimize hyperparameter parameters.',
+    strength: 'Strong',
+    brandColor: '#00FA9A',
+    glowColor: 'rgba(0, 250, 154, 0.4)',
+    iconType: 'tuning',
+    highlights: [
+      'K-Fold Cross-Validation',
+      'GridSearchCV & RandomizedSearchCV',
+      'Bias-Variance tradeoff balancing',
+    ],
+    codeSnippet: `from sklearn.model_selection import GridSearchCV
+
+grid = GridSearchCV(estimator, param_grid, cv=5)
+grid.fit(X_train, y_train)`,
+  },
+
+  // COMPUTER VISION
   {
     id: 'mediapipe',
     name: 'MediaPipe',
@@ -279,6 +490,7 @@ model.fit(X_train, y_train)`,
 const landmarks = result.landmarks?.[0];`,
   },
 
+  // CREATIVE
   {
     id: 'threejs',
     name: 'Three.js',
@@ -306,6 +518,7 @@ export function Scene() {
 }`,
   },
 
+  // TOOLS
   {
     id: 'git',
     name: 'Git & GitHub',
@@ -327,7 +540,6 @@ git add .
 git commit -m "feat: add reactive experience"
 git push origin feature/experience-section`,
   },
-
   {
     id: 'tailwind',
     name: 'Tailwind CSS',

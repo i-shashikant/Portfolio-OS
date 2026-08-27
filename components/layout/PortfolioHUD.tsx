@@ -22,7 +22,7 @@ export default function PortfolioHUD() {
         fixed
         left-6
         top-20
-        z-40
+        z-40 
         hidden
         lg:block
       "

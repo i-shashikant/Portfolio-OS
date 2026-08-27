@@ -3,7 +3,7 @@ export type ExperienceItem = {
   role: string;
   organization: string;
   location: string;
-  type: 'Current' | 'Internship' | 'Self-employed';
+  type: 'Current' | 'Internship' | 'Self-employed' | 'Startup' ;
   startDate: string;
   endDate?: string;
   description: string;
@@ -13,10 +13,28 @@ export type ExperienceItem = {
 export const EXPERIENCE_DATA: ExperienceItem[] = [
   {
     id: 'chibify',
+    role: 'Technology & Operations Lead',
+    organization: 'Chibify Entertainment Pvt. Ltd.',
+    location: 'Remote',
+    type: 'Startup',
+    startDate: 'Sep 2025',
+    description:
+      'Leading technology and operational development for an anime-focused digital platform, working across product direction, software systems, and day-to-day execution.',
+    highlights: [
+      'Leading the technical direction of the platform',
+      'Working on product architecture and feature development',
+      'Coordinating technology and operational workflows',
+      'Translating product ideas into practical technical solutions',
+      'Working across software, AI, and digital product development',
+    ],
+  },
+
+  {
+    id: 'lapsy-studios',
     role: 'Subtitle Editor & Script Writer',
     organization: 'Lapsy Studios',
     location: 'Remote',
-    type: 'Current',
+    type: 'Startup',
     startDate: 'Feb 2025',
     endDate: 'Aug 2025',
     description:

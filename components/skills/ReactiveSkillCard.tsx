@@ -4,12 +4,12 @@ import { useState, useRef, MouseEvent } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { SkillItem } from '@/data/skillData';
 import { soundEngine } from '@/lib/sound/soundEngine';
-import { ArrowUpRight, Sparkles, Terminal, Code2, Database, Cpu, GitBranch, Box } from 'lucide-react';
 import {
-  ScanFace,
-  Layers3,
-  Wind,
+  ArrowUpRight, Sparkles, Terminal, Code2, Database, Cpu, GitBranch, Box,
+  ScanFace, Layers3, Wind, Coffee, Binary, Table2, BrainCircuit, BarChart2,
+  TrendingUp, Sliders, Globe, Zap, Workflow
 } from 'lucide-react';
+
 interface ReactiveSkillCardProps {
   skill: SkillItem;
   onSelect: (skill: SkillItem) => void;
@@ -78,6 +78,8 @@ export default function ReactiveSkillCard({ skill, onSelect }: ReactiveSkillCard
             TS
           </div>
         );
+      case 'java':
+        return <Coffee className="h-9 w-9 text-amber-500" />;
       case 'react':
         return (
           <svg viewBox="0 0 24 24" className="h-10 w-10 animate-[spin_10s_linear_infinite]" style={{ color: skill.brandColor }}>
@@ -98,24 +100,40 @@ export default function ReactiveSkillCard({ skill, onSelect }: ReactiveSkillCard
             <path d="M6 3h3.5L12 12 14.5 3H18L12 15 6 3z" fill="#35495E"/>
           </svg>
         );
+      case 'flask':
+        return <Code2 className="h-9 w-9 text-white" />;
+      case 'rest':
+        return <Globe className="h-9 w-9 text-teal-400" />;
       case 'sql':
         return <Database className="h-9 w-9 text-blue-400" />;
+      case 'redis':
+        return <Zap className="h-9 w-9 text-rose-500" />;
+      case 'celery':
+        return <Workflow className="h-9 w-9 text-emerald-500" />;
       case 'ml':
         return <Cpu className="h-9 w-9 text-amber-500 animate-pulse" />;
+      case 'numpy':
+        return <Binary className="h-9 w-9 text-sky-400" />;
+      case 'pandas':
+        return <Table2 className="h-9 w-9 text-indigo-400" />;
+      case 'scikit-learn':
+        return <BrainCircuit className="h-9 w-9 text-orange-400" />;
+      case 'visualization':
+        return <BarChart2 className="h-9 w-9 text-cyan-400" />;
+      case 'ml-modelling':
+        return <TrendingUp className="h-9 w-9 text-violet-400" />;
+      case 'tuning':
+        return <Sliders className="h-9 w-9 text-emerald-400" />;
       case 'git':
         return <GitBranch className="h-9 w-9 text-orange-500" />;
       case 'docker':
         return <Box className="h-9 w-9 text-sky-400" />;
-
       case 'mediapipe':
-  return <ScanFace className="h-9 w-9 text-cyan-400" />;
-
-case 'threejs':
-  return <Layers3 className="h-9 w-9 text-white" />;
-
-case 'tailwind':
-  return <Wind className="h-9 w-9 text-sky-400" />;
-
+        return <ScanFace className="h-9 w-9 text-cyan-400" />;
+      case 'threejs':
+        return <Layers3 className="h-9 w-9 text-white" />;
+      case 'tailwind':
+        return <Wind className="h-9 w-9 text-sky-400" />;
       default:
         return <Code2 className="h-9 w-9 text-violet-400" />;
     }
