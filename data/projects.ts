@@ -162,4 +162,42 @@ export const projects: Project[] = [
       ],
     },
   },
+  
+  {
+    slug: 'gitvia',
+    title: 'GitVia — GitHub Career Copilot',
+    description:
+      'An AI-powered career development platform that analyzes GitHub repositories and developer profiles to surface technical strengths, identify skill gaps, and connect project evidence with career opportunities.',
+    category: 'AI & Full Stack',
+    technologies: [
+      'Next.js',
+      'TypeScript',
+      'FastAPI',
+      'Python',
+      'PostgreSQL',
+      'SQLAlchemy',
+      'GitHub OAuth',
+    ],
+    featured: true,
+    github: 'https://github.com/i-shashikant/gitvia',
+    caseStudy: {
+      overview:
+        'GitVia is a GitHub Career Copilot designed to help developers turn their coding activity and repository portfolio into actionable career insights.',
+      problem:
+        'Developers often struggle to communicate the value of their GitHub work, identify missing skills, and understand how their technical experience aligns with target roles.',
+      solution:
+        'Built a full-stack application with a Next.js frontend and FastAPI backend, using GitHub integration, repository analysis, and structured career insights to connect developer evidence with career goals.',
+      highlights: [
+        'GitHub OAuth authentication and profile integration',
+        'Repository analysis for code quality, documentation, and architecture',
+        'Developer skill assessment based on project evidence',
+        'Career-role and skill-gap mapping',
+        'Career roadmap generation',
+        'PostgreSQL persistence with SQLAlchemy',
+        'Modular Next.js and FastAPI architecture',
+      ],
+    },
+  },
+
+
 ];
