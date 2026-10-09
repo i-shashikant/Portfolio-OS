@@ -177,6 +177,7 @@ return (
   );
 }`,
   },
+  
   {
     id: 'vue',
     name: 'Vue.js',
@@ -220,6 +221,8 @@ const applications = ref([]);
     codeSnippet: `from flask import Flask
 
 app = Flask(__name__)
+
+
 
 @app.get("/api/health")
 def health():
@@ -565,4 +568,71 @@ git push origin feature/experience-section`,
   Interactive UI
 </div>`,
   },
+  
+  {
+    id: 'fastapi',
+    name: 'FastAPI',
+    category: 'backend',
+    categoryLabel: 'BACKEND',
+    description:
+      'Python framework for building APIs with request validation, structured endpoints, and asynchronous support.',
+    strength: 'Working',
+    brandColor: '#009688',
+    glowColor: 'rgba(0, 150, 136, 0.4)',
+    iconType: 'fastapi',
+    highlights: [
+      'API development for GitVia',
+      'Request and response handling',
+      'Backend route integration',
+    ],
+    codeSnippet: `from fastapi import FastAPI
+
+  app = FastAPI()
+
+  @app.get("/api/health")
+  def health():
+      return {"status": "ok"}`,
+  },
+
+  {
+    id: 'sqlalchemy',
+    name: 'SQLAlchemy',
+    category: 'backend',
+    categoryLabel: 'BACKEND',
+    description:
+      'Python SQL toolkit and ORM for defining database models and working with relational data.',
+    strength: 'Working',
+    brandColor: '#D71F00',
+    glowColor: 'rgba(215, 31, 0, 0.35)',
+    iconType: 'sqlalchemy',
+    highlights: [
+      'ORM-based database models',
+      'Database queries and persistence',
+      'Integration with Python backends',
+    ],
+    codeSnippet: `# Example SQLAlchemy ORM query
+  users = session.query(User).all()`,
+  },
+
+  {
+    id: 'github-api-oauth',
+    name: 'GitHub OAuth & API',
+    category: 'backend',
+    categoryLabel: 'BACKEND / INTEGRATION',
+    description:
+      'Integrating GitHub authentication and API access into applications.',
+    strength: 'Working',
+    brandColor: '#8B949E',
+    glowColor: 'rgba(139, 148, 158, 0.35)',
+    iconType: 'github',
+    highlights: [
+      'GitHub OAuth flow integration',
+      'Authentication callback handling',
+      'GitHub user and repository data',
+    ],
+    codeSnippet: `headers = {
+      "Authorization": f"Bearer {access_token}"
+  }`,
+  },
+
 ];
